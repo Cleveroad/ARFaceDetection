@@ -1,0 +1,18 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/teal_500</item>
+        <item name="colorPrimaryDark">@color/teal_800</item>
+        <item name="colorAccent">@color/pink_800</item>
+        <item name="colorSecondary">@color/red_700</item>
+        <item name="colorError">@color/red_900</item>
+        <item name="android:colorBackground">@color/bg_white</item>
+    </style>
+
+    <style name="CheckBoxTheme" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="colorSwitchThumbNormal">@color/teal_800</item>
+        <item name="colorAccent">@color/pink_800</item>
+    </style>
+
+</resources>

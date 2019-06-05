@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="teal_500">#009688</color>
+    <color name="teal_800">#00695c</color>
+    <color name="pink_800">#ad1457</color>
+    <color name="red_700">#d32f2f</color>
+    <color name="red_900">#b71c1c</color>
+
+    <color name="white">#FFFFFF</color>
+
+    <color name="bg_white">@color/white</color>
+
+</resources>
