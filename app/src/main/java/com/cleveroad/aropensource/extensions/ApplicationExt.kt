@@ -5,15 +5,15 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.cleveroad.aropensource.NPApp
+import com.cleveroad.aropensource.ARApp
 
-fun getStringApp(resId: Int) = NPApp.instance.getString(resId)
+fun getStringApp(resId: Int) = ARApp.instance.getString(resId)
 
 fun getAppString(@StringRes stringId: Int, vararg formatArgs: Any) =
-        NPApp.instance.getString(stringId, *formatArgs)
+        ARApp.instance.getString(stringId, *formatArgs)
 
-fun getStringArray(@ArrayRes id: Int) = NPApp.instance.resources.getStringArray(id)
+fun getStringArray(@ArrayRes id: Int) = ARApp.instance.resources.getStringArray(id)
 
-fun getDrawableApp(@DrawableRes resId: Int) = ContextCompat.getDrawable(NPApp.instance, resId)
+fun getDrawableApp(@DrawableRes resId: Int) = ContextCompat.getDrawable(ARApp.instance, resId)
 
-fun getColorApp(@ColorRes colorRes: Int) = ContextCompat.getColor(NPApp.instance, colorRes)
+fun getColorApp(@ColorRes colorRes: Int) = ContextCompat.getColor(ARApp.instance, colorRes)

@@ -8,10 +8,10 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.TextView
+import com.cleveroad.aropensource.R
+import com.cleveroad.aropensource.utils.EMPTY_STRING
 import com.cleveroad.bootstrap.kotlin_ext.hide
 import com.cleveroad.bootstrap.kotlin_ext.show
-import com.cleveroad.R
-import com.cleveroad.aropensource.utils.EMPTY_STRING
 
 private val updateDefaultDrawState: (TextPaint) -> Unit = {
     with(it) {
@@ -31,11 +31,13 @@ private val updateDefaultDrawState: (TextPaint) -> Unit = {
  * @param onClick handle click
  *
  */
-fun <T> TextView.addClickableText(initText: String,
-                                  separateText: String,
-                                  clickableText: List<Pair<T, String>>,
-                                  updateDrawState: (TextPaint) -> Unit = updateDefaultDrawState,
-                                  onClick: (T) -> Unit) {
+fun <T> TextView.addClickableText(
+    initText: String,
+    separateText: String,
+    clickableText: List<Pair<T, String>>,
+    updateDrawState: (TextPaint) -> Unit = updateDefaultDrawState,
+    onClick: (T) -> Unit
+) {
     text = clickableText.foldIndexed(TextUtils.concat(initText)) { pos, acc, item ->
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(textView: View) {
@@ -62,12 +64,12 @@ fun <T> TextView.addClickableText(initText: String,
  * @param isGone [Boolean] if true TextView will be gone, else invisible
  */
 fun TextView.hideIfEmpty(string: String?, isGone: Boolean = true) =
-        string.takeUnless { it.isNullOrBlank() }
-                ?.let {
-                    show()
-                    text = it
-                }
-                ?: run {
-                    text = EMPTY_STRING
-                    hide(isGone)
-                }
+    string.takeUnless { it.isNullOrBlank() }
+        ?.let {
+            show()
+            text = it
+        }
+        ?: run {
+            text = EMPTY_STRING
+            hide(isGone)
+        }

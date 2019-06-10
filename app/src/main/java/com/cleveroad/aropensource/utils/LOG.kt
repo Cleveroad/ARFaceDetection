@@ -1,7 +1,7 @@
 package com.cleveroad.aropensource.utils
 
 import android.util.Log
-import com.cleveroad.BuildConfig
+import com.cleveroad.aropensource.BuildConfig
 
 object LOG {
 

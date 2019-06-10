@@ -2,4 +2,4 @@ package com.cleveroad.aropensource.utils
 
 
 const val EMPTY_STRING = ""
-val NOTHING = null
+const val SNACK_BAR_DURATION = 5_000

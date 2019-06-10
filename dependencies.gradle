@@ -27,6 +27,8 @@ ext {
 
     okHttpLoggingVersion = '3.9.0'
 
+    sceneformVersion = '1.8.0'
+
     supportDependencies = [
             kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
             appCompat         : "androidx.appcompat:appcompat:$supportVersion",
@@ -48,8 +50,8 @@ ext {
     ]
 
     rxDependencies = [
-            rxJava2: "io.reactivex.rxjava2:rxjava:$rxJava2Version",
-            rxKotlin     : "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
+            rxJava2 : "io.reactivex.rxjava2:rxjava:$rxJava2Version",
+            rxKotlin: "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
     ]
 
     bootstrapDependencies = [
@@ -75,5 +77,13 @@ ext {
 
     securePreferencesDependencies = [
             lib: "com.scottyab:secure-preferences-lib:$securePreferencesVersion"
+    ]
+
+    sceneform = [
+            // Provides ArFragment, and other UX resources.
+            sceneform_ux    : "com.google.ar.sceneform.ux:sceneform-ux:$sceneformVersion",
+            // Alternatively, use ArSceneView without the UX dependency.
+            sceneform_core  : "com.google.ar.sceneform:core:$sceneformVersion",
+            sceneform_assets: "com.google.ar.sceneform:assets:$sceneformVersion"
     ]
 }

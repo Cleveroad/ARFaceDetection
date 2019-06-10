@@ -5,14 +5,14 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import com.cleveroad.bootstrap.kotlin_core.ui.BaseLifecycleFragment
-import com.cleveroad.bootstrap.kotlin_core.ui.BaseLifecycleViewModel
-import com.cleveroad.bootstrap.kotlin_ext.withNotNull
-import com.cleveroad.BuildConfig
-import com.cleveroad.R
+import com.cleveroad.aropensource.BuildConfig
+import com.cleveroad.aropensource.R
 import com.cleveroad.aropensource.ui.base.dialog.DialogFragmentCallback
+import com.cleveroad.aropensource.utils.EMPTY_STRING
+import com.cleveroad.bootstrap.kotlin_core.ui.BaseLifecycleFragment
+import com.cleveroad.bootstrap.kotlin_ext.withNotNull
 
-abstract class BaseFragment<T : BaseLifecycleViewModel> : BaseLifecycleFragment<T>(),
+abstract class BaseFragment<T : BaseVM> : BaseLifecycleFragment<T>(),
     DialogFragmentCallback {
 
     companion object {
@@ -36,9 +36,10 @@ abstract class BaseFragment<T : BaseLifecycleViewModel> : BaseLifecycleFragment<
             }
         }
     }
+
     private var blockKeyboardListener: Boolean = true
 
-    override var endpoint = BuildConfig.ENDPOINT
+    override var endpoint = EMPTY_STRING
 
     override var versionName = BuildConfig.VERSION_NAME
 

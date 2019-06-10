@@ -44,10 +44,6 @@ android {
         all {
             buildConfigField "String", "GIT_HASH", "\"$buildGitHash\""
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            // TODO change name and password
-            buildConfigField "String", "SECURE_PREF_NAME", '"name_prefs.xml"'
-            buildConfigField "String", "SECURE_PREF_PASSWORD", '"qwerty123"'
-            buildConfigField "Integer", "LOCALHOST_PORT", '8080'
         }
 
         debug {
@@ -145,4 +141,11 @@ dependencies {
 
     // OkHttpProfiler
     implementation "com.itkacher.okhttpprofiler:okhttpprofiler:1.0.5"
+
+    //sceneform
+    implementation rootProject.ext.sceneform.sceneform_ux
+    implementation rootProject.ext.sceneform.sceneform_core
+    implementation rootProject.ext.sceneform.sceneform_assets
+
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 }

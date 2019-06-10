@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import com.cleveroad.R
+import com.cleveroad.aropensource.R
 import com.cleveroad.aropensource.extensions.clickWithDebounce
 import com.cleveroad.aropensource.extensions.hideIfEmpty
 import com.cleveroad.aropensource.ui.base.FragmentArgumentDelegate
@@ -18,10 +18,10 @@ class MessageDialogFragment : SimpleDialogFragment() {
 
     companion object {
         fun newInstance(title: String? = null, message: String? = null) =
-                MessageDialogFragment().apply {
-                    this.title = title
-                    this.message = message
-                }
+            MessageDialogFragment().apply {
+                this.title = title
+                this.message = message
+            }
     }
 
     private var title by FragmentArgumentDelegate<String>()

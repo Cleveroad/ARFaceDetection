@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NewProject</string>
+    <string name="app_name">AR Open Source</string>
 
     <!--error-->
     <string name="server_error">Server error</string>
