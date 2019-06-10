@@ -3,6 +3,11 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.cleveroad.aropensource">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- This tag indicates that this application requires ARCore. This results in the application
+        only being visible in the Google Play Store on devices that support ARCore. -->
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+
     <application
             android:name=".ARApp"
             android:allowBackup="false"
@@ -12,6 +17,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+
+        <meta-data android:name="com.google.ar.core" android:value="required" />
 
         <activity
                 android:name=".ui.screens.splash.SplashActivity"
@@ -24,7 +31,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.screens.main.MainActivity"/>
+        <activity android:name=".ui.screens.main.MainActivity"
+                  android:screenOrientation="locked"/>
 
     </application>
 </manifest>

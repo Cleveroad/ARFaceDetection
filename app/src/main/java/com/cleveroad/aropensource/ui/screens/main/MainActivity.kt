@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.cleveroad.aropensource.R
 import com.cleveroad.aropensource.ui.base.BaseLifecycleActivity
 import com.cleveroad.aropensource.ui.screens.main.arcore.CameraPreviewFragment
+import com.cleveroad.aropensource.ui.screens.main.face_detector.AugmentedFacesFragment
 
 class MainActivity : BaseLifecycleActivity<MainVM>() {
     companion object {
@@ -28,6 +29,14 @@ class MainActivity : BaseLifecycleActivity<MainVM>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        showFaceDetectorScreen()
+    }
+
+    private fun showCameraPreviewScreen() {
         replaceFragment(CameraPreviewFragment.newInstance())
+    }
+
+    private fun showFaceDetectorScreen() {
+        replaceFragment(AugmentedFacesFragment.newInstance())
     }
 }

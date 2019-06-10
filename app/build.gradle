@@ -29,8 +29,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     println("Debug Build number $buildNoDevelop")
@@ -108,36 +108,9 @@ dependencies {
     implementation rootProject.ext.bootstrapDependencies.core
     implementation rootProject.ext.bootstrapDependencies.ext
 
-    // Stetho
-    implementation "com.facebook.stetho:stetho:$rootProject.ext.stethoVersion"
-
-    // Room
-    implementation rootProject.ext.roomDependencies.migration
-    implementation rootProject.ext.roomDependencies.compiler
-    implementation rootProject.ext.roomDependencies.runtime
-    implementation rootProject.ext.roomDependencies.rxjava2
-    implementation rootProject.ext.roomDependencies.testing
-    implementation rootProject.ext.roomDependencies.common
-    implementation rootProject.ext.roomDependencies.guava
-
     // RxJava
     implementation rootProject.ext.rxDependencies.rxJava2
     implementation rootProject.ext.rxDependencies.rxKotlin
-
-    // Retrofit
-    implementation rootProject.ext.retrofitDependencies.converter
-    implementation rootProject.ext.retrofitDependencies.retrofit
-    implementation rootProject.ext.retrofitDependencies.adapter
-
-    // Jackson
-    implementation rootProject.ext.jacksonDependencies.interceptor
-    implementation rootProject.ext.jacksonDependencies.annotations
-    implementation rootProject.ext.jacksonDependencies.databind
-    implementation rootProject.ext.jacksonDependencies.core
-    implementation rootProject.ext.jacksonDependencies.joda
-
-    // Secure preferences
-    implementation rootProject.ext.securePreferencesDependencies.lib
 
     // LoggingInterceptor
     implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
@@ -149,10 +122,15 @@ dependencies {
 
     //sceneform
     implementation rootProject.ext.sceneform.sceneform_ux
-    implementation rootProject.ext.sceneform.sceneform_core
-    implementation rootProject.ext.sceneform.sceneform_assets
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 }
+
+apply plugin: 'com.google.ar.sceneform.plugin'
+
+sceneform.asset('sampledata/models/fox_face.fbx',
+        'sampledata/models/fox_face_material.mat',
+        'sampledata/models/fox_face.sfa',
+        'src/main/res/raw/fox_face')

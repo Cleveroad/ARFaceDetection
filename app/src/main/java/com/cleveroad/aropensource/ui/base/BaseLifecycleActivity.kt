@@ -22,7 +22,8 @@ import kotlinx.android.synthetic.main.include_progress.*
 
 abstract class BaseLifecycleActivity<T : BaseVM> : AppCompatActivity(),
     BaseView,
-    BackPressedCallback {
+    BackPressedCallback,
+    BackPressedNavigationCallback {
 
     companion object {
         private const val BACK_STACK_COUNT_ZERO = 0
@@ -96,6 +97,10 @@ abstract class BaseLifecycleActivity<T : BaseVM> : AppCompatActivity(),
                 }
             }
         }
+    }
+
+    override fun homePressed() {
+        backPressed()
     }
 
     override fun showProgress() {

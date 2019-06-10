@@ -27,7 +27,7 @@ ext {
 
     okHttpLoggingVersion = '3.9.0'
 
-    sceneformVersion = '1.8.0'
+    sceneformVersion = '1.9.0'
 
     supportDependencies = [
             kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
@@ -81,9 +81,6 @@ ext {
 
     sceneform = [
             // Provides ArFragment, and other UX resources.
-            sceneform_ux    : "com.google.ar.sceneform.ux:sceneform-ux:$sceneformVersion",
-            // Alternatively, use ArSceneView without the UX dependency.
-            sceneform_core  : "com.google.ar.sceneform:core:$sceneformVersion",
-            sceneform_assets: "com.google.ar.sceneform:assets:$sceneformVersion"
+            sceneform_ux: "com.google.ar.sceneform.ux:sceneform-ux:$sceneformVersion"
     ]
 }
