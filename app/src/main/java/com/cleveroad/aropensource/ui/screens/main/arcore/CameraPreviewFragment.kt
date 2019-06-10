@@ -2,11 +2,9 @@ package com.cleveroad.aropensource.ui.screens.main.arcore
 
 import android.os.Bundle
 import com.cleveroad.aropensource.R
-import com.cleveroad.aropensource.ui.base.BaseFragment
-import com.cleveroad.bootstrap.kotlin_core.ui.NO_TITLE
-import com.cleveroad.bootstrap.kotlin_core.ui.NO_TOOLBAR
+import com.cleveroad.aropensource.ui.base.BaseLifecycleFragment
 
-class CameraPreviewFragment : BaseFragment<CameraPreviewVM>() {
+class CameraPreviewFragment : BaseLifecycleFragment<CameraPreviewVM>() {
 
     companion object {
         fun newInstance() =
@@ -25,6 +23,6 @@ class CameraPreviewFragment : BaseFragment<CameraPreviewVM>() {
 
     override fun hasToolbar() = false
 
-    override fun observeLiveData(viewModel: CameraPreviewVM) = Unit
+    override fun observeLiveData() = Unit
 
 }

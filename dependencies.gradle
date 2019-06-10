@@ -2,7 +2,7 @@ ext {
     //TODO update version of libraries
     // versions are relevant for 11 april 2019
     compileSdkVersion = 28
-    minSdkVersion = 21
+    minSdkVersion = 24
     buildToolsVersion = '28.0.3'
     targetSdkVersion = 28
 
