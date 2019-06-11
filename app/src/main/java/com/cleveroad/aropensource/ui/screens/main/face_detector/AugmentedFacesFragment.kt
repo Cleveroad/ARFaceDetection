@@ -15,7 +15,7 @@ import com.google.ar.sceneform.FrameTime
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.rendering.Renderable
 import com.google.ar.sceneform.rendering.Texture
-import com.google.ar.sceneform.ux.AugmentedFaceNode
+
 
 class AugmentedFacesFragment : BaseLifecycleFragment<AugmentedFacesVM>() {
 
@@ -37,7 +37,7 @@ class AugmentedFacesFragment : BaseLifecycleFragment<AugmentedFacesVM>() {
 
     private var faceMeshTexture: Texture? = null
 
-    private val faceNodeMap = HashMap<AugmentedFace, AugmentedFaceNode>()
+    private val faceNodeMap = HashMap<AugmentedFace, CustomAugmentedFaceNode>()
 
     override fun getScreenTitle() = NO_TITLE
 
@@ -84,14 +84,13 @@ class AugmentedFacesFragment : BaseLifecycleFragment<AugmentedFacesVM>() {
             // Make new AugmentedFaceNodes for any new faces.
             sceneView.session?.getAllTrackables(AugmentedFace::class.java)?.forEach { face ->
                 if (!faceNodeMap.containsKey(face)) {
-                    val faceNode = AugmentedFaceNode(face)
+                    val faceNode = CustomAugmentedFaceNode(face, requireContext())
                     faceNode.setParent(scene)
                     faceNode.faceRegionsRenderable = faceRegionsRenderable
                     faceNode.faceMeshTexture = faceMeshTexture
                     faceNodeMap[face] = faceNode
                 }
             }
-
             // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
             val iter = faceNodeMap.entries.iterator()
             while (iter.hasNext()) {
@@ -100,6 +99,7 @@ class AugmentedFacesFragment : BaseLifecycleFragment<AugmentedFacesVM>() {
                 if (face.trackingState == TrackingState.STOPPED) {
                     val faceNode = entry.value
                     faceNode.setParent(null)
+                    faceNode.children?.forEach { it.setParent(null) }
                     iter.remove()
                 }
             }

@@ -37,6 +37,6 @@ class MainActivity : BaseLifecycleActivity<MainVM>() {
     }
 
     private fun showFaceDetectorScreen() {
-        replaceFragment(AugmentedFacesFragment.newInstance())
+        replaceFragment(AugmentedFacesFragment.newInstance(), false)
     }
 }
