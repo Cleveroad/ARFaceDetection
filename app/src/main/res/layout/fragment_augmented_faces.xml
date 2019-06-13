@@ -2,7 +2,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <fragment android:name="com.cleveroad.aropensource.ui.screens.main.face_detector.FaceDetectorFragment"
+    <fragment android:name="com.cleveroad.aropensource.ui.screens.main.arcore.face_detector.FaceDetectorFragment"
               android:id="@+id/face_fragment"
               android:layout_width="match_parent"
               android:layout_height="match_parent"/>

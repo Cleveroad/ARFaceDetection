@@ -29,6 +29,10 @@ ext {
 
     sceneformVersion = '1.9.0'
 
+    mlVisionVersion = '20.0.0'
+    mlVisionFaceModelVersion = '17.0.2'
+    firebaseCoreVersion = '16.0.9'
+
     supportDependencies = [
             kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
             appCompat         : "androidx.appcompat:appcompat:$supportVersion",
@@ -82,5 +86,11 @@ ext {
     sceneform = [
             // Provides ArFragment, and other UX resources.
             sceneform_ux: "com.google.ar.sceneform.ux:sceneform-ux:$sceneformVersion"
+    ]
+
+    firebase = [
+            core                : "com.google.firebase:firebase-core:$firebaseCoreVersion",
+            ml_vision           : "com.google.firebase:firebase-ml-vision:$mlVisionVersion",
+            ml_vision_face_model: "com.google.firebase:firebase-ml-vision-face-model:$mlVisionFaceModelVersion"
     ]
 }

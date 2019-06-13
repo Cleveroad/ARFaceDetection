@@ -1,4 +1,4 @@
-package com.cleveroad.aropensource.ui.screens.main.face_detector
+package com.cleveroad.aropensource.ui.screens.main.arcore.face_detector
 
 import android.os.Bundle
 import android.view.LayoutInflater

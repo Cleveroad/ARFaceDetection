@@ -6,9 +6,13 @@ import android.os.Bundle
 import com.cleveroad.aropensource.R
 import com.cleveroad.aropensource.ui.base.BaseLifecycleActivity
 import com.cleveroad.aropensource.ui.screens.main.arcore.CameraPreviewFragment
-import com.cleveroad.aropensource.ui.screens.main.face_detector.AugmentedFacesFragment
+import com.cleveroad.aropensource.ui.screens.main.arcore.face_detector.AugmentedFacesFragment
+import com.cleveroad.aropensource.ui.screens.main.chooser.InstrumentsCallback
+import com.cleveroad.aropensource.ui.screens.main.chooser.InstrumentsFragment
+import com.cleveroad.aropensource.ui.screens.main.mlkit.FaceDetectorFragment
 
-class MainActivity : BaseLifecycleActivity<MainVM>() {
+class MainActivity : BaseLifecycleActivity<MainVM>(), InstrumentsCallback {
+
     companion object {
         fun start(context: Context) = context.run {
             Intent(this, MainActivity::class.java).apply {
@@ -29,14 +33,22 @@ class MainActivity : BaseLifecycleActivity<MainVM>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        showFaceDetectorScreen()
+        showInstrumentsScreen()
+    }
+
+    private fun showInstrumentsScreen() {
+        replaceFragment(InstrumentsFragment.newInstance(), false)
     }
 
     private fun showCameraPreviewScreen() {
         replaceFragment(CameraPreviewFragment.newInstance())
     }
 
-    private fun showFaceDetectorScreen() {
-        replaceFragment(AugmentedFacesFragment.newInstance(), false)
+    override fun mlKitlSelected() {
+        replaceFragment(FaceDetectorFragment.newInstance())
+    }
+
+    override fun arCoreSelected() {
+        replaceFragment(AugmentedFacesFragment.newInstance())
     }
 }

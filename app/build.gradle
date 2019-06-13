@@ -123,14 +123,14 @@ dependencies {
     //sceneform
     implementation rootProject.ext.sceneform.sceneform_ux
 
+    //ml kit
+    implementation rootProject.ext.firebase.ml_vision
+    implementation rootProject.ext.firebase.ml_vision_face_model
+    implementation rootProject.ext.firebase.core
+
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 }
 
-apply plugin: 'com.google.ar.sceneform.plugin'
-
-sceneform.asset('sampledata/models/fox_face.fbx',
-        'sampledata/models/fox_face_material.mat',
-        'sampledata/models/fox_face.sfa',
-        'src/main/res/raw/fox_face')
+apply plugin: 'com.google.gms.google-services'

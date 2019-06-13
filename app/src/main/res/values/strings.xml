@@ -20,4 +20,10 @@
     <string name="title_privacy_policy">Privacy Policy</string>
     <string name="agree">Agree</string>
 
+    <!--instruments screen-->
+    <string name="instrument_selector">Instrument selector</string>
+    <string name="arcore">ARCore</string>
+    <string name="mlkit">ML Kit</string>
+    <string name="select_instrument">Select instrument</string>
+
 </resources>

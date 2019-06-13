@@ -1,4 +1,4 @@
-package com.cleveroad.aropensource.ui.screens.main.face_detector
+package com.cleveroad.aropensource.ui.screens.main.arcore.face_detector
 
 import android.content.Context
 import android.widget.Toast
@@ -13,11 +13,12 @@ import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.ar.sceneform.ux.AugmentedFaceNode
 
+
 class CustomAugmentedFaceNode(augmentedFace: AugmentedFace?, private val context: Context) :
     AugmentedFaceNode(augmentedFace) {
 
     companion object {
-        private const val Y_POSITION_OFFSET = 0.07f
+        private const val Y_POSITION_OFFSET = 0.0f
     }
 
     private var logoNode: Node? = null

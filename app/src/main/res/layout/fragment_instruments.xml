@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/include_toolbar"/>
+
+    <TextView android:id="@+id/tvSelectInstrument"
+              android:layout_width="wrap_content"
+              android:layout_gravity="center"
+              android:text="@string/select_instrument"
+              android:layout_marginBottom="5dp"
+              android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/bArcore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:layout_marginBottom="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/arcore"/>
+
+    <Button
+            android:id="@+id/bMlKit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/mlkit"/>
+
+</LinearLayout>
