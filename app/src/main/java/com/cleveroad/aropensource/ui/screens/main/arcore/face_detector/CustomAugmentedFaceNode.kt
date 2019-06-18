@@ -51,10 +51,12 @@ class CustomAugmentedFaceNode(augmentedFace: AugmentedFace?, private val context
                 val rightHeard = getRegionPose(AugmentedFace.RegionType.FOREHEAD_RIGHT)
                 val leftHeard = getRegionPose(AugmentedFace.RegionType.FOREHEAD_LEFT)
 
+                val zCoordinate =
+                    (leftHeard.tz() + rightHeard.tz()) / HALF_DIVIDER + (getRegionPose(AugmentedFace.RegionType.NOSE_TIP).tz() - centerPose.tz()) * -1
                 logoNode?.worldPosition = Vector3(
                     (leftHeard.tx() + rightHeard.tx()) / HALF_DIVIDER,
                     (leftHeard.ty() + rightHeard.ty()) / HALF_DIVIDER,
-                    (leftHeard.tz() + rightHeard.tz()) / HALF_DIVIDER
+                    zCoordinate
                 )
             }
         }
