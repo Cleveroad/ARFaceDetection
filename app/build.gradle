@@ -103,8 +103,6 @@ dependencies {
     implementation rootProject.ext.supportDependencies.design
 
     // Bootstrap
-    implementation rootProject.ext.bootstrapDependencies.validators
-    implementation rootProject.ext.bootstrapDependencies.rxBus
     implementation rootProject.ext.bootstrapDependencies.core
     implementation rootProject.ext.bootstrapDependencies.ext
 

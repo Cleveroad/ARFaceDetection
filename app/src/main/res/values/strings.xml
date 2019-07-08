@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AR Open Source</string>
+    <string name="app_name">ARFaceDetection</string>
 
     <!--error-->
     <string name="server_error">Server error</string>
