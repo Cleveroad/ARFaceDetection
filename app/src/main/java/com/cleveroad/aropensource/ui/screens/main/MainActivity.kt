@@ -33,7 +33,7 @@ class MainActivity : BaseLifecycleActivity<MainVM>(), InstrumentsCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        replaceFragment(AugmentedFacesFragment.newInstance(), false)
+        showInstrumentsScreen()
     }
 
     private fun showInstrumentsScreen() {

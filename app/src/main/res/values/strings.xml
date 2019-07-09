@@ -25,5 +25,7 @@
     <string name="arcore">ARCore</string>
     <string name="mlkit">ML Kit</string>
     <string name="select_instrument">Select instrument</string>
+    <string name="front">front</string>
+    <string name="main">main</string>
 
 </resources>
