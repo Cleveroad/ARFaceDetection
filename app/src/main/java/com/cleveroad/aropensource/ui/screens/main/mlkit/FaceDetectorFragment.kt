@@ -10,7 +10,8 @@ import com.cleveroad.aropensource.extensions.printLog
 import com.cleveroad.aropensource.extensions.printLogE
 import com.cleveroad.aropensource.ui.base.BaseLifecycleFragment
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.CameraSource
-import com.cleveroad.aropensource.ui.screens.main.mlkit.common.CameraSource.*
+import com.cleveroad.aropensource.ui.screens.main.mlkit.common.CameraSource.CAMERA_FACING_BACK
+import com.cleveroad.aropensource.ui.screens.main.mlkit.common.CameraSource.CAMERA_FACING_FRONT
 import com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers.FaceContourDetectorProcessor
 import com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers.FaceDetectionProcessor
 import com.cleveroad.bootstrap.kotlin_ext.hide
@@ -27,9 +28,6 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
             FaceDetectorFragment().apply {
                 arguments = Bundle()
             }
-
-        private const val FACE_DETECTION = "Face Detection"
-        private const val FACE_CONTOUR = "Face Contour"
     }
 
     override val viewModelClass = FaceDetectorVM::class.java
@@ -55,7 +53,7 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
             if (Camera.getNumberOfCameras() == 1) hide()
         }
         requestPermission(CAMERA) {
-            createCameraSource(FACE_CONTOUR)
+            createCameraSource()
             startCameraSource()
         }
     }
@@ -105,21 +103,15 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
         }
     }
 
-    private fun createCameraSource(model: String) {
+    private fun createCameraSource() {
         // If there's no existing cameraSource, create one.
         if (cameraSource == null) {
             cameraSource = CameraSource(activity, fireFaceOverlay)
         }
         try {
-            when (model) {
-                FACE_DETECTION -> FaceDetectionProcessor(resources)
-                FACE_CONTOUR -> FaceContourDetectorProcessor()
-                else -> null
-            }?.let {
-                cameraSource?.setMachineLearningFrameProcessor(it)
-            }
+            cameraSource?.setMachineLearningFrameProcessor(FaceContourDetectorProcessor())
         } catch (e: FirebaseMLException) {
-            e.printLogE("can not create camera source: $model")
+            e.printLogE("can not create camera source: face contour")
         }
     }
 }

@@ -2,6 +2,9 @@ package com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.cleveroad.aropensource.ARApp
+import com.cleveroad.aropensource.R
+import com.cleveroad.aropensource.ui.screens.main.mlkit.common.BitmapUtils.getBitmapFromVectorDrawable
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.CameraImageGraphic
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.FrameMetadata
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.GraphicOverlay
@@ -12,6 +15,8 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.FirebaseVisionFace
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.NO_LANDMARKS
 import java.io.IOException
 
 /**
@@ -21,13 +26,17 @@ class FaceContourDetectorProcessor : VisionProcessorBase<List<FirebaseVisionFace
 
     private val detector: FirebaseVisionFaceDetector
 
+    private val overlayBitmap: Bitmap
+
     init {
         val options = FirebaseVisionFaceDetectorOptions.Builder()
-                .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
-                .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
-                .build()
+            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
+            .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
+            .setLandmarkMode(NO_LANDMARKS)
+            .build()
 
         detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
+        overlayBitmap = getBitmapFromVectorDrawable(ARApp.instance, R.drawable.ic_joincleveroad_medium)
     }
 
     override fun stop() {
@@ -56,7 +65,7 @@ class FaceContourDetectorProcessor : VisionProcessorBase<List<FirebaseVisionFace
         }
 
         results.forEach {
-            val faceGraphic = FaceContourGraphic(graphicOverlay, it)
+            val faceGraphic = FaceContourGraphic(graphicOverlay, it, overlayBitmap)
             graphicOverlay.add(faceGraphic)
         }
 

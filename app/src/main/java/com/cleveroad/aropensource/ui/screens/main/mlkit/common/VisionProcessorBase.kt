@@ -43,16 +43,6 @@ abstract class VisionProcessorBase<T> : VisionImageProcessor {
         }
     }
 
-    // Bitmap version
-    override fun process(bitmap: Bitmap, graphicOverlay: GraphicOverlay) {
-        detectInVisionImage(
-            null, /* bitmap */
-            FirebaseVisionImage.fromBitmap(bitmap),
-            null,
-            graphicOverlay
-        )
-    }
-
     @Synchronized
     private fun processLatestImage(graphicOverlay: GraphicOverlay) {
         processingImage = latestImage

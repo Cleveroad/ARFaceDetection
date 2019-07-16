@@ -1,16 +1,37 @@
 package com.cleveroad.aropensource.ui.screens.main.mlkit.common;
 
+import android.content.Context;
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera.CameraInfo;
 import android.util.Log;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 
-/** Utils functions for bitmap conversions. */
+/**
+ * Utils functions for bitmap conversions.
+ */
 public class BitmapUtils {
+
+
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+
+        if (drawable != null) {
+            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                    drawable.getIntrinsicHeight(),
+                    Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            return bitmap;
+        }
+        return null;
+    }
 
     // Convert NV21 format byte buffer to bitmap.
     @Nullable
@@ -64,6 +85,12 @@ public class BitmapUtils {
             matrix.postScale(-1.0f, 1.0f);
             return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         }
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 }
 
