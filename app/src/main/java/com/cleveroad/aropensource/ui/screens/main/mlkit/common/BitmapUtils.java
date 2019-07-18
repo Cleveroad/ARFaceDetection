@@ -5,6 +5,7 @@ import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera.CameraInfo;
 import android.util.Log;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
@@ -87,10 +88,22 @@ public class BitmapUtils {
         }
     }
 
-    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+    public static Bitmap rotateBitmap(Bitmap source, float angleY, float angleZ) {
         Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
+        final Camera camera = new Camera();
+        camera.save();
+        camera.rotateZ(angleZ);
+        camera.rotateY(angleY);
+        camera.getMatrix(matrix);
+        camera.restore();
+
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
+
+//    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+//        Matrix matrix = new Matrix();
+//        matrix.postRotate(angle);
+//        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+//    }
 }
 

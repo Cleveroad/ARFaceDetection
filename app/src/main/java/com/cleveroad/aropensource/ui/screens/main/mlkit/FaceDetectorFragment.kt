@@ -109,7 +109,7 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
             cameraSource = CameraSource(activity, fireFaceOverlay)
         }
         try {
-            cameraSource?.setMachineLearningFrameProcessor(FaceContourDetectorProcessor())
+            cameraSource?.setMachineLearningFrameProcessor(FaceDetectionProcessor(resources))
         } catch (e: FirebaseMLException) {
             e.printLogE("can not create camera source: face contour")
         }

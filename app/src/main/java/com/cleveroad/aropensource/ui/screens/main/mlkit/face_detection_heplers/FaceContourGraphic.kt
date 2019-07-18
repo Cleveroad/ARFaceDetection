@@ -42,8 +42,13 @@ class FaceContourGraphic(
                 val x = translateX(noseTop.x + direction.x * -1)
                 val y = translateY(noseTop.y + direction.y * -1)
 
+                val originalVector = Vector3(0F, y, 0F)
+                val newVector = Vector3(x - translateX(noseBottom.x), y, 0F)
+                val angleBetweenVectors = Vector3.angleBetweenVectors(originalVector, newVector)
+
                 overlayBitmap?.let {
-                    rotateBitmap(it, face.headEulerAngleZ)
+//                    rotateBitmap(it, angleBetweenVectors)
+                    it
                 }?.let {
                     val imageEdgeSizeBasedOnFaceSizeX = it.width
                     val imageEdgeSizeBasedOnFaceSizeY = it.height
@@ -55,7 +60,6 @@ class FaceContourGraphic(
 
                     canvas.drawBitmap(it, null, Rect(left, top, right, bottom), null)
                 }
-
             }
         }
     }

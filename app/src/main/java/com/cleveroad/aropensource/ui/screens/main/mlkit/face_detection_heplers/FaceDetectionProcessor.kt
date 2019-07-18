@@ -12,6 +12,7 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.FirebaseVisionFace
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.NO_CONTOURS
 import java.io.IOException
 
 /** Face Detector Demo.  */
@@ -23,8 +24,10 @@ class FaceDetectionProcessor(res: Resources) : VisionProcessorBase<List<Firebase
 
     init {
         val options = FirebaseVisionFaceDetectorOptions.Builder()
-            .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
+            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
+            .setClassificationMode(FirebaseVisionFaceDetectorOptions.NO_CLASSIFICATIONS)
             .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
+            .setContourMode(NO_CONTOURS)
             .build()
 
         detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
