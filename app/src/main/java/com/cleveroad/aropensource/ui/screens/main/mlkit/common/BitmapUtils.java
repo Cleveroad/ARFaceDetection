@@ -3,9 +3,7 @@ package com.cleveroad.aropensource.ui.screens.main.mlkit.common;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
-import android.hardware.Camera.CameraInfo;
 import android.util.Log;
-import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
@@ -13,11 +11,13 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 
+import static android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
+import static android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT;
+
 /**
  * Utils functions for bitmap conversions.
  */
 public class BitmapUtils {
-
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
@@ -79,7 +79,7 @@ public class BitmapUtils {
 
         // Rotate the image back to straight.}
         matrix.postRotate(rotationDegree);
-        if (facing == CameraInfo.CAMERA_FACING_BACK) {
+        if (facing == CAMERA_FACING_BACK) {
             return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         } else {
             // Mirror the image along X axis for front-facing camera image.
@@ -88,10 +88,14 @@ public class BitmapUtils {
         }
     }
 
-    public static Bitmap rotateBitmap(Bitmap source, float angleY, float angleZ) {
+    public static Bitmap rotateBitmap(Bitmap source, int facing, float angleY, float angleZ) {
         Matrix matrix = new Matrix();
         final Camera camera = new Camera();
         camera.save();
+        if (facing == CAMERA_FACING_FRONT) {
+            angleZ *= -1;
+            angleY *= -1;
+        }
         camera.rotateZ(angleZ);
         camera.rotateY(angleY);
         camera.getMatrix(matrix);
@@ -99,11 +103,4 @@ public class BitmapUtils {
 
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
-
-//    public static Bitmap rotateBitmap(Bitmap source, float angle) {
-//        Matrix matrix = new Matrix();
-//        matrix.postRotate(angle);
-//        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-//    }
 }
-

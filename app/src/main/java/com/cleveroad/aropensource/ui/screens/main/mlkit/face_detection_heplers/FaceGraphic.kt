@@ -1,6 +1,8 @@
 package com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers
 
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Rect
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.BitmapUtils.rotateBitmap
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.GraphicOverlay
 import com.google.ar.sceneform.math.Vector3
@@ -14,17 +16,9 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark.*
 class FaceGraphic(
     overlay: GraphicOverlay,
     private val firebaseVisionFace: FirebaseVisionFace?,
-    private val overlayBitmap: Bitmap?
-) :
-    GraphicOverlay.Graphic(overlay) {
-
-    /**
-     * Draws the face annotations for position on the supplied canvas.
-     */
-
-    private val facePositionPaint = Paint().apply {
-        color = Color.WHITE
-    }
+    private val overlayBitmap: Bitmap?,
+    private val cameraFacing: Int
+) : GraphicOverlay.Graphic(overlay) {
 
     override fun draw(canvas: Canvas) {
         val face = firebaseVisionFace ?: return
@@ -33,38 +27,25 @@ class FaceGraphic(
     }
 
     private fun test(canvas: Canvas, face: FirebaseVisionFace) {
+        val leftEye = face.getLandmark(LEFT_EYE)?.position ?: return
+        val rightEye = face.getLandmark(RIGHT_EYE)?.position ?: return
+        val mouthBottom = face.getLandmark(MOUTH_BOTTOM)?.position ?: return
 
+        val faceHeight = face.boundingBox.height() * 1.3F
 
-//        val centerX = translateX(face.boundingBox.centerX().toFloat())
-//
-//        val yOffset = scaleY(face.boundingBox.height() / 2.0f)
-//        val top = translateY(face.boundingBox.centerY().toFloat()) - yOffset
-//        val bottom = translateY(face.boundingBox.centerY().toFloat()) + yOffset
-//y' = y*cos(a) + x*sin(a), x' = - y*sin(a) + x*cos(a)
-//        val first = Vector3(0F, top, 0F)
-//        val angleFirst = Quaternion.axisAngle(first, face.headEulerAngleZ)
-//        val result = Quaternion.rotateVector(angleFirst, first)
-//        val x = result.x + centerX
-//        val y = result.y
-
-        val leftEyePosition = face.getLandmark(LEFT_EYE)?.position ?: return
-        val rightEyePosition = face.getLandmark(RIGHT_EYE)?.position ?: return
-        val noseBasePosition = face.getLandmark(NOSE_BASE)?.position ?: return
-        val centerEyes =
-            Vector3(
-                (leftEyePosition.x + rightEyePosition.x) / 2,
-                (leftEyePosition.y + rightEyePosition.y) / 2, 0F
-            )
-        val direction = Vector3(centerEyes.x - noseBasePosition.x, centerEyes.y - noseBasePosition.y, 0F).normalized()
-        val faceHeight = face.boundingBox.height() / 2
+        val direction = Vector3(
+            (rightEye.x + leftEye.x) / 2 - mouthBottom.x,
+            (rightEye.y + leftEye.y) / 2 - mouthBottom.y,
+            0F
+        ).normalized()
         direction.x *= faceHeight
         direction.y *= faceHeight
 
-        val x = translateX(centerEyes.x + direction.x)
-        val y = translateY(centerEyes.y + direction.y)
+        val x = translateX(mouthBottom.x + direction.x)
+        val y = translateY(mouthBottom.y + direction.y)
 
         overlayBitmap?.let {
-            rotateBitmap(it, face.headEulerAngleY * -1, face.headEulerAngleZ * -1)
+            rotateBitmap(it, cameraFacing, face.headEulerAngleY, face.headEulerAngleZ)
         }?.let {
             val imageEdgeSizeBasedOnFaceSizeX = it.width
             val imageEdgeSizeBasedOnFaceSizeY = it.height

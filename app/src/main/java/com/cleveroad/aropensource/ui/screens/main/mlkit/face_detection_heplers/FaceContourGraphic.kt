@@ -12,7 +12,8 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceContour.NOSE_BRIDGE
 class FaceContourGraphic(
     overlay: GraphicOverlay,
     private val firebaseVisionFace: FirebaseVisionFace?,
-    private val overlayBitmap: Bitmap?
+    private val overlayBitmap: Bitmap?,
+    private val cameraFacing: Int
 ) : GraphicOverlay.Graphic(overlay) {
 
     private val facePositionPaint: Paint
@@ -38,17 +39,10 @@ class FaceContourGraphic(
                 val direction = Vector3(noseTop.x - noseBottom.x, noseTop.y - noseBottom.y, 0F).normalized()
                 direction.x *= faceHeight
                 direction.y *= faceHeight
-
                 val x = translateX(noseTop.x + direction.x * -1)
                 val y = translateY(noseTop.y + direction.y * -1)
-
-                val originalVector = Vector3(0F, y, 0F)
-                val newVector = Vector3(x - translateX(noseBottom.x), y, 0F)
-                val angleBetweenVectors = Vector3.angleBetweenVectors(originalVector, newVector)
-
                 overlayBitmap?.let {
-//                    rotateBitmap(it, angleBetweenVectors)
-                    it
+                    rotateBitmap(it, cameraFacing, face.headEulerAngleY, face.headEulerAngleZ)
                 }?.let {
                     val imageEdgeSizeBasedOnFaceSizeX = it.width
                     val imageEdgeSizeBasedOnFaceSizeY = it.height

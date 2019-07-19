@@ -15,7 +15,6 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.FirebaseVisionFace
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
-import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.NO_LANDMARKS
 import java.io.IOException
 
@@ -31,8 +30,9 @@ class FaceContourDetectorProcessor : VisionProcessorBase<List<FirebaseVisionFace
     init {
         val options = FirebaseVisionFaceDetectorOptions.Builder()
             .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
-            .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
+            .setClassificationMode(FirebaseVisionFaceDetectorOptions.NO_CLASSIFICATIONS)
             .setLandmarkMode(NO_LANDMARKS)
+            .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
             .build()
 
         detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
@@ -65,7 +65,7 @@ class FaceContourDetectorProcessor : VisionProcessorBase<List<FirebaseVisionFace
         }
 
         results.forEach {
-            val faceGraphic = FaceContourGraphic(graphicOverlay, it, overlayBitmap)
+            val faceGraphic = FaceContourGraphic(graphicOverlay, it, overlayBitmap, frameMetadata.cameraFacing)
             graphicOverlay.add(faceGraphic)
         }
 
