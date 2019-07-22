@@ -3,6 +3,7 @@ package com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
+import androidx.camera.core.CameraX.LensFacing
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.BitmapUtils.rotateBitmap
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.GraphicOverlay
 import com.google.ar.sceneform.math.Vector3
@@ -17,16 +18,15 @@ class FaceGraphic(
     overlay: GraphicOverlay,
     private val firebaseVisionFace: FirebaseVisionFace?,
     private val overlayBitmap: Bitmap?,
-    private val cameraFacing: Int
+    private val cameraFacing: LensFacing
 ) : GraphicOverlay.Graphic(overlay) {
 
     override fun draw(canvas: Canvas) {
         val face = firebaseVisionFace ?: return
-
-        test(canvas, face)
+        drawImage(canvas, face)
     }
 
-    private fun test(canvas: Canvas, face: FirebaseVisionFace) {
+    private fun drawImage(canvas: Canvas, face: FirebaseVisionFace) {
         val leftEye = face.getLandmark(LEFT_EYE)?.position ?: return
         val rightEye = face.getLandmark(RIGHT_EYE)?.position ?: return
         val mouthBottom = face.getLandmark(MOUTH_BOTTOM)?.position ?: return

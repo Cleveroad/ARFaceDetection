@@ -1,11 +1,9 @@
 package com.cleveroad.aropensource.ui.screens.main.mlkit.common
 
-import android.graphics.Bitmap
+import android.media.Image
 import androidx.annotation.GuardedBy
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
-import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
-import java.nio.ByteBuffer
 
 /**
  * Abstract base class for ML Kit frame processors. Subclasses need to implement {@link
@@ -15,78 +13,43 @@ import java.nio.ByteBuffer
  * @param <T> The type of the detected feature.
  */
 abstract class VisionProcessorBase<T> : VisionImageProcessor {
-
-    // To keep the latest images and its metadata.
-    @GuardedBy("this")
-    private var latestImage: ByteBuffer? = null
-
-    @GuardedBy("this")
-    private var latestImageMetaData: FrameMetadata? = null
-
     // To keep the images and metadata in process.
     @GuardedBy("this")
-    private var processingImage: ByteBuffer? = null
+    private var processingImage: Image? = null
 
     @GuardedBy("this")
     private var processingMetaData: FrameMetadata? = null
 
     @Synchronized
-    override fun process(
-        data: ByteBuffer,
-        frameMetadata: FrameMetadata,
-        graphicOverlay: GraphicOverlay
-    ) {
-        latestImage = data
-        latestImageMetaData = frameMetadata
-        if (processingImage == null && processingMetaData == null) {
-            processLatestImage(graphicOverlay)
-        }
+    override fun process(image: Image, frameMetadata: FrameMetadata, graphicOverlay: GraphicOverlay) {
+        processingImage = image
+        processingMetaData = frameMetadata
+        processLatestImage(graphicOverlay)
     }
 
     @Synchronized
     private fun processLatestImage(graphicOverlay: GraphicOverlay) {
-        processingImage = latestImage
-        processingMetaData = latestImageMetaData
-        latestImage = null
-        latestImageMetaData = null
         if (processingImage != null && processingMetaData != null) {
             processImage(processingImage!!, processingMetaData!!, graphicOverlay)
         }
     }
 
-    private fun processImage(
-        data: ByteBuffer,
-        frameMetadata: FrameMetadata,
-        graphicOverlay: GraphicOverlay
-    ) {
-        val metadata = FirebaseVisionImageMetadata.Builder()
-            .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-            .setWidth(frameMetadata.width)
-            .setHeight(frameMetadata.height)
-            .setRotation(frameMetadata.rotation)
-            .build()
-
-        val bitmap = BitmapUtils.getBitmap(data, frameMetadata)
+    private fun processImage(image: Image, frameMetadata: FrameMetadata, graphicOverlay: GraphicOverlay) {
         detectInVisionImage(
-            bitmap, FirebaseVisionImage.fromByteBuffer(data, metadata), frameMetadata,
+            FirebaseVisionImage.fromMediaImage(image, frameMetadata.rotation),
+            frameMetadata,
             graphicOverlay
         )
     }
 
     private fun detectInVisionImage(
-        originalCameraImage: Bitmap?,
         image: FirebaseVisionImage,
-        metadata: FrameMetadata?,
+        metadata: FrameMetadata,
         graphicOverlay: GraphicOverlay
     ) {
         detectInImage(image)
             .addOnSuccessListener { results ->
-                onSuccess(
-                    originalCameraImage, results,
-                    metadata!!,
-                    graphicOverlay
-                )
-                processLatestImage(graphicOverlay)
+                onSuccess(results, metadata, graphicOverlay)
             }
             .addOnFailureListener { e -> onFailure(e) }
     }
@@ -102,7 +65,6 @@ abstract class VisionProcessorBase<T> : VisionImageProcessor {
      * image.
      */
     protected abstract fun onSuccess(
-        originalCameraImage: Bitmap?,
         results: T,
         frameMetadata: FrameMetadata,
         graphicOverlay: GraphicOverlay

@@ -92,6 +92,8 @@ dependencies {
     implementation rootProject.ext.supportDependencies.multiDex
     implementation rootProject.ext.supportDependencies.kotlin
     implementation rootProject.ext.supportDependencies.design
+    implementation rootProject.ext.supportDependencies.cameraXCore
+    implementation rootProject.ext.supportDependencies.cameraXExtensions
 
     // Bootstrap
     implementation rootProject.ext.bootstrapDependencies.core

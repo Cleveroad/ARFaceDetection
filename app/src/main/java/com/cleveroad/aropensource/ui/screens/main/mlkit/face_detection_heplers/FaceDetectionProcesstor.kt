@@ -1,6 +1,5 @@
 package com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers
 
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.util.Log
 import com.cleveroad.aropensource.ARApp
@@ -16,7 +15,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.NO_C
 import java.io.IOException
 
 /** Face Detector Demo.  */
-class FaceDetectionProcessor(res: Resources) : VisionProcessorBase<List<FirebaseVisionFace>>() {
+class FaceDetectionProcessor() : VisionProcessorBase<List<FirebaseVisionFace>>() {
 
     private val detector: FirebaseVisionFaceDetector
 
@@ -49,14 +48,11 @@ class FaceDetectionProcessor(res: Resources) : VisionProcessorBase<List<Firebase
     }
 
     override fun onSuccess(
-        originalCameraImage: Bitmap?,
         results: List<FirebaseVisionFace>,
         frameMetadata: FrameMetadata,
         graphicOverlay: GraphicOverlay
     ) {
         graphicOverlay.clear()
-        val imageGraphic = CameraImageGraphic(graphicOverlay, originalCameraImage)
-        graphicOverlay.add(imageGraphic)
         for (i in results.indices) {
             val face = results[i]
             val faceGraphic = FaceGraphic(graphicOverlay, face, overlayBitmap, frameMetadata.cameraFacing)

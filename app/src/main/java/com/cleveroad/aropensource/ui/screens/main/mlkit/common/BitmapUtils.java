@@ -1,18 +1,15 @@
 package com.cleveroad.aropensource.ui.screens.main.mlkit.common;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Camera;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
-import androidx.annotation.Nullable;
+import androidx.camera.core.CameraX.LensFacing;
 import androidx.core.content.ContextCompat;
-import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
-
-import static android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
-import static android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT;
+import static androidx.camera.core.CameraX.LensFacing.FRONT;
 
 /**
  * Utils functions for bitmap conversions.
@@ -34,65 +31,11 @@ public class BitmapUtils {
         return null;
     }
 
-    // Convert NV21 format byte buffer to bitmap.
-    @Nullable
-    public static Bitmap getBitmap(ByteBuffer data, FrameMetadata metadata) {
-        data.rewind();
-        byte[] imageInBuffer = new byte[data.limit()];
-        data.get(imageInBuffer, 0, imageInBuffer.length);
-        try {
-            YuvImage image =
-                    new YuvImage(
-                            imageInBuffer, ImageFormat.NV21, metadata.getWidth(), metadata.getHeight(), null);
-            if (image != null) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                image.compressToJpeg(new Rect(0, 0, metadata.getWidth(), metadata.getHeight()), 80, stream);
-
-                Bitmap bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
-
-                stream.close();
-                return rotateBitmap(bmp, metadata.getRotation(), metadata.getCameraFacing());
-            }
-        } catch (Exception e) {
-            Log.e("VisionProcessorBase", "Error: " + e.getMessage());
-        }
-        return null;
-    }
-
-    // Rotates a bitmap if it is converted from a bytebuffer.
-    private static Bitmap rotateBitmap(Bitmap bitmap, int rotation, int facing) {
-        Matrix matrix = new Matrix();
-        int rotationDegree = 0;
-        switch (rotation) {
-            case FirebaseVisionImageMetadata.ROTATION_90:
-                rotationDegree = 90;
-                break;
-            case FirebaseVisionImageMetadata.ROTATION_180:
-                rotationDegree = 180;
-                break;
-            case FirebaseVisionImageMetadata.ROTATION_270:
-                rotationDegree = 270;
-                break;
-            default:
-                break;
-        }
-
-        // Rotate the image back to straight.}
-        matrix.postRotate(rotationDegree);
-        if (facing == CAMERA_FACING_BACK) {
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        } else {
-            // Mirror the image along X axis for front-facing camera image.
-            matrix.postScale(-1.0f, 1.0f);
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        }
-    }
-
-    public static Bitmap rotateBitmap(Bitmap source, int facing, float angleY, float angleZ) {
+    public static Bitmap rotateBitmap(Bitmap source, LensFacing facing, float angleY, float angleZ) {
         Matrix matrix = new Matrix();
         final Camera camera = new Camera();
         camera.save();
-        if (facing == CAMERA_FACING_FRONT) {
+        if (facing == FRONT) {
             angleZ *= -1;
             angleY *= -1;
         }
