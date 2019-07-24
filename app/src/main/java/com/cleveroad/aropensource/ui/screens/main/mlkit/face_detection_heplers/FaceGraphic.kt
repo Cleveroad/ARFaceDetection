@@ -16,14 +16,13 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark.*
  */
 class FaceGraphic(
     overlay: GraphicOverlay,
-    private val firebaseVisionFace: FirebaseVisionFace?,
+    private val firebaseVisionFace: FirebaseVisionFace,
     private val overlayBitmap: Bitmap?,
     private val cameraFacing: LensFacing
 ) : GraphicOverlay.Graphic(overlay) {
 
     override fun draw(canvas: Canvas) {
-        val face = firebaseVisionFace ?: return
-        drawImage(canvas, face)
+        drawImage(canvas, firebaseVisionFace)
     }
 
     private fun drawImage(canvas: Canvas, face: FirebaseVisionFace) {
@@ -38,11 +37,13 @@ class FaceGraphic(
             (rightEye.y + leftEye.y) / 2 - mouthBottom.y,
             0F
         ).normalized()
+
         direction.x *= faceHeight
         direction.y *= faceHeight
 
         val x = translateX(mouthBottom.x + direction.x)
         val y = translateY(mouthBottom.y + direction.y)
+
 
         overlayBitmap?.let {
             rotateBitmap(it, cameraFacing, face.headEulerAngleY, face.headEulerAngleZ)
@@ -56,7 +57,6 @@ class FaceGraphic(
             val bottom = (y + imageEdgeSizeBasedOnFaceSizeY).toInt()
 
             canvas.drawBitmap(it, null, Rect(left, top, right, bottom), null)
-
         }
     }
 }

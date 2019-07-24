@@ -7,28 +7,17 @@ import com.cleveroad.aropensource.ui.screens.main.mlkit.common.FrameMetadata
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.GraphicOverlay
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
 
-interface FaceAnalyzerListener {
 
-}
+class FaceAnalyzer(private val graphicOverlay: GraphicOverlay, private val facing: LensFacing) :
+    ImageAnalysis.Analyzer {
 
-class FaceAnalyzer(
-    private val listener: FaceAnalyzerListener? = null,
-    private val previewWidth: Int,
-    private val previewHeight: Int,
-    private val graphicOverlay: GraphicOverlay,
-    private val facing: LensFacing
-) : ImageAnalysis.Analyzer {
-
-    private val faceDetectionProcessor =
-        FaceDetectionProcessor()
+    private val faceDetectionProcessor = FaceDetectionProcessor()
 
     override fun analyze(image: ImageProxy?, rotationDegrees: Int) {
         image?.image?.let {
             faceDetectionProcessor.process(
                 it,
                 FrameMetadata.Builder()
-                    .setWidth(previewWidth)
-                    .setHeight(previewHeight)
                     .setRotation(rotationDegreesToFirebaseRotation(rotationDegrees))
                     .setCameraFacing(facing)
                     .build(),

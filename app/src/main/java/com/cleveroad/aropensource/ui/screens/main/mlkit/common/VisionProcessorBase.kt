@@ -64,11 +64,7 @@ abstract class VisionProcessorBase<T> : VisionImageProcessor {
      * @param originalCameraImage hold the original image from camera, used to draw the background
      * image.
      */
-    protected abstract fun onSuccess(
-        results: T,
-        frameMetadata: FrameMetadata,
-        graphicOverlay: GraphicOverlay
-    )
+    protected abstract fun onSuccess(results: T, frameMetadata: FrameMetadata, graphicOverlay: GraphicOverlay)
 
     protected abstract fun onFailure(e: Exception)
 }

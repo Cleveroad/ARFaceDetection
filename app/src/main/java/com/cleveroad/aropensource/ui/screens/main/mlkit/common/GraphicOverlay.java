@@ -17,7 +17,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
-import com.google.android.gms.vision.CameraSource;
+import androidx.camera.core.CameraX;
+import androidx.camera.core.CameraX.LensFacing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class GraphicOverlay extends View {
   private float widthScaleFactor = 1.0f;
   private int previewHeight;
   private float heightScaleFactor = 1.0f;
-  private int facing = CameraSource.CAMERA_FACING_BACK;
+  private LensFacing facing = LensFacing.BACK;
   private final List<Graphic> graphics = new ArrayList<>();
 
   /**
@@ -98,7 +99,7 @@ public class GraphicOverlay extends View {
      * Adjusts the x coordinate from the preview's coordinate system to the view coordinate system.
      */
     public float translateX(float x) {
-      if (overlay.facing == CameraSource.CAMERA_FACING_FRONT) {
+      if (overlay.facing == LensFacing.FRONT) {
         return overlay.getWidth() - scaleX(x);
       } else {
         return scaleX(x);
@@ -148,7 +149,7 @@ public class GraphicOverlay extends View {
    * Sets the camera attributes for size and facing direction, which informs how to transform image
    * coordinates later.
    */
-  public void setCameraInfo(int previewWidth, int previewHeight, int facing) {
+  public void setCameraInfo(int previewWidth, int previewHeight, LensFacing facing) {
     synchronized (lock) {
       this.previewWidth = previewWidth;
       this.previewHeight = previewHeight;

@@ -19,19 +19,8 @@ import androidx.camera.core.CameraX.LensFacing;
  * Describing a frame info.
  */
 public class FrameMetadata {
-
-    private final int width;
-    private final int height;
     private final int rotation;
     private final LensFacing cameraFacing;
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 
     public int getRotation() {
         return rotation;
@@ -41,9 +30,7 @@ public class FrameMetadata {
         return cameraFacing;
     }
 
-    private FrameMetadata(int width, int height, int rotation, LensFacing facing) {
-        this.width = width;
-        this.height = height;
+    private FrameMetadata(int rotation, LensFacing facing) {
         this.rotation = rotation;
         cameraFacing = facing;
     }
@@ -52,21 +39,8 @@ public class FrameMetadata {
      * Builder of {@link FrameMetadata}.
      */
     public static class Builder {
-
-        private int width;
-        private int height;
         private int rotation;
         private LensFacing cameraFacing;
-
-        public Builder setWidth(int width) {
-            this.width = width;
-            return this;
-        }
-
-        public Builder setHeight(int height) {
-            this.height = height;
-            return this;
-        }
 
         public Builder setRotation(int rotation) {
             this.rotation = rotation;
@@ -79,7 +53,7 @@ public class FrameMetadata {
         }
 
         public FrameMetadata build() {
-            return new FrameMetadata(width, height, rotation, cameraFacing);
+            return new FrameMetadata(rotation, cameraFacing);
         }
     }
 }

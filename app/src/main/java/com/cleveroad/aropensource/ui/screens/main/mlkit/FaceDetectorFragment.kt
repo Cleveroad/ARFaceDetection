@@ -1,26 +1,24 @@
 package com.cleveroad.aropensource.ui.screens.main.mlkit
 
 import android.Manifest.permission.CAMERA
+import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Matrix
 import android.hardware.Camera
 import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.DisplayMetrics
-import android.util.Rational
-import android.view.Surface
 import android.view.View
-import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.camera.core.*
+import androidx.camera.core.CameraX.LensFacing.BACK
+import androidx.camera.core.CameraX.LensFacing.FRONT
 import com.cleveroad.aropensource.R
 import com.cleveroad.aropensource.ui.base.BaseLifecycleFragment
 import com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers.FaceAnalyzer
-import com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers.FaceAnalyzerListener
 import com.cleveroad.aropensource.utils.AutoFitPreviewBuilder
 import com.cleveroad.bootstrap.kotlin_ext.hide
+import com.cleveroad.bootstrap.kotlin_ext.safeLet
 import kotlinx.android.synthetic.main.ml_kit_face_detector_fragment.*
 
 
@@ -41,7 +39,7 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
 
     private var displayId = -1
 
-    private var lensFacing = CameraX.LensFacing.FRONT
+    private var lensFacing = FRONT
 
     /** Internal reference of the [DisplayManager] */
     private var displayManager: DisplayManager? = null
@@ -54,14 +52,18 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
      * orientation changes.
      */
     private val displayListener = object : DisplayManager.DisplayListener {
+
         override fun onDisplayAdded(displayId: Int) = Unit
+
         override fun onDisplayRemoved(displayId: Int) = Unit
-        override fun onDisplayChanged(displayId: Int) = view?.let { view ->
-            if (displayId == this@FaceDetectorFragment.displayId) {
-                preview?.setTargetRotation(view.display.rotation)
-                imageAnalyzer?.setTargetRotation(view.display.rotation)
+
+        override fun onDisplayChanged(displayId: Int) {
+            view?.let { view ->
+                if (displayId == this@FaceDetectorFragment.displayId) {
+                    imageAnalyzer?.setTargetRotation(view.display.rotation)
+                }
             }
-        } ?: Unit
+        }
     }
 
     override fun getScreenTitle() = NO_TITLE
@@ -88,15 +90,20 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
             viewFinder.post {
                 // Keep track of the display in which this view is attached
                 displayId = viewFinder.display.displayId
-                startCamera()
+                bindCameraUseCases()
             }
         }
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-//        cameraSource?.setFacing(if (isChecked) CAMERA_FACING_FRONT else CAMERA_FACING_BACK)
-//        firePreview?.stop()
-//        startCameraSource()
+        lensFacing = when (lensFacing) {
+            FRONT -> BACK
+            else -> FRONT
+        }
+        // Only bind use cases if we can query a camera with this orientation
+        CameraX.getCameraWithLensFacing(lensFacing)
+        bindCameraUseCases()
     }
 
     override fun onDestroyView() {
@@ -104,84 +111,36 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
         displayManager?.unregisterDisplayListener(displayListener)
     }
 
-    private fun startCamera() {
-        // Create configuration object for the viewfinder use case
-
-        // Get screen metrics used to setup camera for full screen resolution
-        val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
-        val screenAspectRatio = Rational(metrics.widthPixels, metrics.heightPixels)
+    private fun bindCameraUseCases() {
+        safeLet(preview, imageAnalyzer) { preview, imageAnalyzer ->
+            CameraX.unbind(preview, imageAnalyzer)
+        }
 
         val previewConfig = PreviewConfig.Builder().apply {
             setLensFacing(lensFacing)
-            // We request aspect ratio but no resolution to let CameraX optimize our use cases
-            setTargetAspectRatio(screenAspectRatio)
-            // Set initial target rotation, we will have to call this again if rotation changes
-            // during the lifecycle of this use case
             setTargetRotation(viewFinder.display.rotation)
         }.build()
 
-        // Use the auto-fit preview builder to automatically handle size and orientation changes
         preview = AutoFitPreviewBuilder.build(previewConfig, viewFinder)
 
-        // Every time the viewfinder is updated, recompute layout
-        preview?.setOnPreviewOutputUpdateListener {
-            // To update the SurfaceTexture, we have to remove it and re-add it
-            (viewFinder.parent as? ViewGroup)?.run {
-                removeView(viewFinder)
-                addView(viewFinder, 0)
-            }
-            viewFinder.surfaceTexture = it.surfaceTexture
-            updateTransform()
-        }
-
-        // Setup image analysis pipeline that computes average pixel luminance in real time
         val analyzerConfig = ImageAnalysisConfig.Builder().apply {
             setLensFacing(lensFacing)
-            // Use a worker thread for image analysis to prevent preview glitches
             val analyzerThread = HandlerThread("FaceAnalyzer").apply { start() }
             setCallbackHandler(Handler(analyzerThread.looper))
-            // In our analysis, we care more about the latest image than analyzing *every* image
             setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
             // Set initial target rotation, we will have to call this again if rotation changes
             // during the lifecycle of this use case
             setTargetRotation(viewFinder.display.rotation)
         }.build()
         imageAnalyzer = ImageAnalysis(analyzerConfig).apply {
-            analyzer = FaceAnalyzer(
-                object : FaceAnalyzerListener {
-
-                },
-                viewFinder.width,
-                viewFinder.height,
-                fireFaceOverlay,
-                lensFacing
-            )
+            fireFaceOverlay.run {
+                setCameraInfo(480, 640, lensFacing)
+            }
+            analyzer = FaceAnalyzer(fireFaceOverlay, lensFacing)
         }
 
         // Apply declared configs to CameraX using the same lifecycle owner
-        CameraX.bindToLifecycle(
-            viewLifecycleOwner, preview, imageAnalyzer
-        )
-    }
+        CameraX.bindToLifecycle(viewLifecycleOwner, preview, imageAnalyzer)
 
-    private fun updateTransform() {
-        val matrix = Matrix()
-
-        // Compute the center of the view finder
-        val centerX = viewFinder.width / 2f
-        val centerY = viewFinder.height / 2f
-
-        // Correct preview output to account for display rotation
-        val rotationDegrees = when (viewFinder.display.rotation) {
-            Surface.ROTATION_0 -> 0
-            Surface.ROTATION_90 -> 90
-            Surface.ROTATION_180 -> 180
-            Surface.ROTATION_270 -> 270
-            else -> return
-        }
-        matrix.postRotate(-rotationDegrees.toFloat(), centerX, centerY)
-
-        // Finally, apply transformations to our TextureView
-        viewFinder.setTransform(matrix)
     }
 }
