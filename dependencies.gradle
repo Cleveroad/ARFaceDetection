@@ -7,7 +7,7 @@ ext {
     targetSdkVersion = 28
 
     archVersion = "2.0.0"
-    supportVersion = "1.1.0-alpha05"
+    supportVersion = "1.0.0"
     constraintlayoutVersion = "1.1.2"
     multiDexVersion = "2.0.0"
 

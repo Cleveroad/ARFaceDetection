@@ -32,7 +32,7 @@ class InstrumentsFragment : BaseLifecycleFragment<InstrumentsVM>(), View.OnClick
 
     override fun observeLiveData() = Unit
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
         instrumentsCallback = bindInterfaceOrThrow<InstrumentsCallback>(context)
     }

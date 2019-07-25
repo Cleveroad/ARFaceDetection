@@ -6,8 +6,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.cleveroad.aropensource.ui.base.FragmentArgumentDelegate
 import com.cleveroad.bootstrap.kotlin_core.ui.BaseDialogFragment
+import com.cleveroad.aropensource.ui.base.FragmentArgumentDelegate
 
 /**
  * This interface need implement for getting result from [BaseDialogFragment]
@@ -34,7 +34,7 @@ abstract class SimpleDialogFragment : BaseDialogFragment() {
      */
     fun <T> T.showForResult(requestCode: Int) where T : Fragment, T : DialogFragmentCallback {
         setTargetFragment(this, requestCode)
-        fragmentManager?.let { show(it, javaClass.simpleName) }
+        show(fragmentManager, javaClass.simpleName)
     }
 
     /**
@@ -61,10 +61,10 @@ abstract class SimpleDialogFragment : BaseDialogFragment() {
             }
         }
         callback?.takeUnless { requestCode == DEFAULT_REQUEST_CODE }
-            ?.onDialogResult(requestCode, resultCode, data)
+                ?.onDialogResult(requestCode, resultCode, data)
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
+    override fun onDismiss(dialog: DialogInterface?) {
         setResult(Activity.RESULT_CANCELED)
         super.onDismiss(dialog)
     }

@@ -13,47 +13,67 @@
 // limitations under the License.
 package com.cleveroad.aropensource.ui.screens.main.mlkit.common;
 
-import androidx.camera.core.CameraX.LensFacing;
-
-/**
- * Describing a frame info.
- */
+/** Describing a frame info. */
 public class FrameMetadata {
-    private final int rotation;
-    private final LensFacing cameraFacing;
 
-    public int getRotation() {
-        return rotation;
+  private final int width;
+  private final int height;
+  private final int rotation;
+  private final int cameraFacing;
+
+  public int getWidth() {
+    return width;
+  }
+
+  public int getHeight() {
+    return height;
+  }
+
+  public int getRotation() {
+    return rotation;
+  }
+
+  public int getCameraFacing() {
+    return cameraFacing;
+  }
+
+  private FrameMetadata(int width, int height, int rotation, int facing) {
+    this.width = width;
+    this.height = height;
+    this.rotation = rotation;
+    cameraFacing = facing;
+  }
+
+  /** Builder of {@link FrameMetadata}. */
+  public static class Builder {
+
+    private int width;
+    private int height;
+    private int rotation;
+    private int cameraFacing;
+
+    public Builder setWidth(int width) {
+      this.width = width;
+      return this;
     }
 
-    public LensFacing getCameraFacing() {
-        return cameraFacing;
+    public Builder setHeight(int height) {
+      this.height = height;
+      return this;
     }
 
-    private FrameMetadata(int rotation, LensFacing facing) {
-        this.rotation = rotation;
-        cameraFacing = facing;
+    public Builder setRotation(int rotation) {
+      this.rotation = rotation;
+      return this;
     }
 
-    /**
-     * Builder of {@link FrameMetadata}.
-     */
-    public static class Builder {
-        private int rotation;
-        private LensFacing cameraFacing;
-
-        public Builder setRotation(int rotation) {
-            this.rotation = rotation;
-            return this;
-        }
-
-        public Builder setCameraFacing(LensFacing facing) {
-            cameraFacing = facing;
-            return this;
-        }
-
-        public FrameMetadata build() {
-            return new FrameMetadata(rotation, cameraFacing);
-        }
+    public Builder setCameraFacing(int facing) {
+      cameraFacing = facing;
+      return this;
     }
+
+    public FrameMetadata build() {
+      return new FrameMetadata(width, height, rotation, cameraFacing);
+    }
+  }
 }

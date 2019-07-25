@@ -1,13 +1,11 @@
 package com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers
 
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.util.Log
 import com.cleveroad.aropensource.ARApp
 import com.cleveroad.aropensource.R
-import com.cleveroad.aropensource.ui.screens.main.mlkit.common.BitmapUtils
-import com.cleveroad.aropensource.ui.screens.main.mlkit.common.FrameMetadata
-import com.cleveroad.aropensource.ui.screens.main.mlkit.common.GraphicOverlay
-import com.cleveroad.aropensource.ui.screens.main.mlkit.common.VisionProcessorBase
+import com.cleveroad.aropensource.ui.screens.main.mlkit.common.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
@@ -18,7 +16,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.NO_C
 import java.io.IOException
 
 /** Face Detector Demo.  */
-class FaceDetectionProcessor : VisionProcessorBase<List<FirebaseVisionFace>>() {
+class FaceDetectionProcessor() : VisionProcessorBase<List<FirebaseVisionFace>>() {
 
     private val detector: FirebaseVisionFaceDetector
 
@@ -29,7 +27,7 @@ class FaceDetectionProcessor : VisionProcessorBase<List<FirebaseVisionFace>>() {
             .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
             .setClassificationMode(FirebaseVisionFaceDetectorOptions.NO_CLASSIFICATIONS)
             .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
-            .setMinFaceSize(0.4F)
+            .setMinFaceSize(0.4f)
             .setContourMode(NO_CONTOURS)
             .build()
 
@@ -51,16 +49,18 @@ class FaceDetectionProcessor : VisionProcessorBase<List<FirebaseVisionFace>>() {
     }
 
     override fun onSuccess(
+        originalCameraImage: Bitmap?,
         results: List<FirebaseVisionFace>,
         frameMetadata: FrameMetadata,
         graphicOverlay: GraphicOverlay
     ) {
         graphicOverlay.clear()
+        val imageGraphic = CameraImageGraphic(graphicOverlay, originalCameraImage)
+        graphicOverlay.add(imageGraphic)
         for (i in results.indices) {
             val face = results[i]
             val faceGraphic = FaceGraphic(graphicOverlay, face, overlayBitmap, frameMetadata.cameraFacing)
             graphicOverlay.add(faceGraphic)
-            break
         }
         graphicOverlay.postInvalidate()
     }

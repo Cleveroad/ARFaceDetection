@@ -1,27 +1,24 @@
 package com.cleveroad.aropensource.ui.screens.main.mlkit
 
 import android.Manifest.permission.CAMERA
-import android.annotation.SuppressLint
-import android.content.Context
 import android.hardware.Camera
-import android.hardware.display.DisplayManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.Process.THREAD_PRIORITY_URGENT_AUDIO
-import android.util.Rational
-import android.util.Size
 import android.view.View
 import android.widget.CompoundButton
-import androidx.camera.core.*
-import androidx.camera.core.CameraX.LensFacing.BACK
-import androidx.camera.core.CameraX.LensFacing.FRONT
 import com.cleveroad.aropensource.R
+import com.cleveroad.aropensource.extensions.printLog
+import com.cleveroad.aropensource.extensions.printLogE
 import com.cleveroad.aropensource.ui.base.BaseLifecycleFragment
-import com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers.FaceAnalyzer
-import com.cleveroad.aropensource.utils.AutoFitPreviewBuilder
+import com.cleveroad.aropensource.ui.screens.main.mlkit.common.CameraSource
+import com.cleveroad.aropensource.ui.screens.main.mlkit.common.CameraSource.CAMERA_FACING_BACK
+import com.cleveroad.aropensource.ui.screens.main.mlkit.common.CameraSource.CAMERA_FACING_FRONT
+import com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers.FaceContourDetectorProcessor
+import com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers.FaceDetectionProcessor
 import com.cleveroad.bootstrap.kotlin_ext.hide
+import com.cleveroad.bootstrap.kotlin_ext.safeLet
+import com.google.firebase.ml.common.FirebaseMLException
 import kotlinx.android.synthetic.main.ml_kit_face_detector_fragment.*
+import java.io.IOException
 
 
 class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundButton.OnCheckedChangeListener {
@@ -37,36 +34,7 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
 
     override val layoutId = R.layout.ml_kit_face_detector_fragment
 
-    private var preview: Preview? = null
-
-    private var displayId = -1
-
-    private var lensFacing = FRONT
-
-    /** Internal reference of the [DisplayManager] */
-    private var displayManager: DisplayManager? = null
-
-    private var imageAnalyzer: ImageAnalysis? = null
-
-    /**
-     * We need a display listener for orientation changes that do not trigger a configuration
-     * change, for example if we choose to override config change in manifest or for 180-degree
-     * orientation changes.
-     */
-    private val displayListener = object : DisplayManager.DisplayListener {
-
-        override fun onDisplayAdded(displayId: Int) = Unit
-
-        override fun onDisplayRemoved(displayId: Int) = Unit
-
-        override fun onDisplayChanged(displayId: Int) {
-            view?.let { view ->
-                if (displayId == this@FaceDetectorFragment.displayId) {
-                    imageAnalyzer?.setTargetRotation(view.display.rotation)
-                }
-            }
-        }
-    }
+    private var cameraSource: CameraSource? = null
 
     override fun getScreenTitle() = NO_TITLE
 
@@ -84,67 +52,67 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
             // Hide the toggle button if there is only 1 camera
             if (Camera.getNumberOfCameras() == 1) hide()
         }
-
-        // Every time the orientation of device changes, recompute layout
-        displayManager = viewFinder.context.getSystemService(Context.DISPLAY_SERVICE) as? DisplayManager
-        displayManager?.registerDisplayListener(displayListener, null)
         requestPermission(CAMERA) {
-            viewFinder.post {
-                // Keep track of the display in which this view is attached
-                displayId = viewFinder.display.displayId
-                bindCameraUseCases()
-            }
+            createCameraSource()
+            startCameraSource()
         }
     }
 
-    @SuppressLint("RestrictedApi")
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-        lensFacing = when (lensFacing) {
-            FRONT -> BACK
-            else -> FRONT
-        }
-        // Only bind use cases if we can query a camera with this orientation
-        CameraX.getCameraWithLensFacing(lensFacing)
-        bindCameraUseCases()
+        cameraSource?.setFacing(if (isChecked) CAMERA_FACING_FRONT else CAMERA_FACING_BACK)
+        firePreview?.stop()
+        startCameraSource()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        displayManager?.unregisterDisplayListener(displayListener)
+    override fun onResume() {
+        super.onResume()
+        startCameraSource()
     }
 
-    @SuppressLint("RestrictedApi")
-    private fun bindCameraUseCases() {
-        CameraX.unbindAll()
-        val aspectRatio = Rational(viewFinder.width, viewFinder.height)
-        val screenSize = Size(viewFinder.width, viewFinder.height)
+    /** Stops the camera.  */
+    override fun onPause() {
+        firePreview?.stop()
+        super.onPause()
+    }
 
-        val previewConfig = PreviewConfig.Builder().apply {
-            setTargetAspectRatio(aspectRatio)
-            setTargetResolution(screenSize)
-            setLensFacing(lensFacing)
-            setTargetRotation(viewFinder.display.rotation)
-        }.build()
+    override fun onDestroy() {
+        cameraSource?.release()
+        super.onDestroy()
+    }
 
-        preview = AutoFitPreviewBuilder.build(previewConfig, viewFinder)
+    /**
+     * Starts or restarts the camera source, if it exists. If the camera source doesn't exist yet
+     * (e.g., because onResume was called before the camera source was created), this will be called
+     * again when the camera source is created.
+     */
+    private fun startCameraSource() {
+        cameraSource?.let {
+            try {
+                firePreview ?: printLog("resume: Preview is null")
 
-        val analyzerConfig = ImageAnalysisConfig.Builder().apply {
-            val analyzerThread = HandlerThread("FaceAnalyzer", THREAD_PRIORITY_URGENT_AUDIO).apply { start() }
-            setCallbackHandler(Handler(analyzerThread.looper))
-            setLensFacing(lensFacing)
-            setTargetAspectRatio(aspectRatio)
-            setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
-            setTargetRotation(viewFinder.display.rotation)
-            setImageQueueDepth(1)
-        }.build()
-        imageAnalyzer = ImageAnalysis(analyzerConfig).apply {
-            fireFaceOverlay.run {
-                setCameraInfo(480, 640, lensFacing)
+                fireFaceOverlay ?: printLog("resume: graphOverlay is null")
+
+                safeLet(firePreview, fireFaceOverlay) { firePreview, fireFaceOverlay ->
+                    firePreview.start(cameraSource, fireFaceOverlay)
+                }
+            } catch (e: IOException) {
+                e.printLogE("Unable to start camera source.")
+                cameraSource?.release()
+                cameraSource = null
             }
-            analyzer = FaceAnalyzer(fireFaceOverlay, lensFacing)
         }
+    }
 
-        CameraX.bindToLifecycle(viewLifecycleOwner, preview, imageAnalyzer)
-
+    private fun createCameraSource() {
+        // If there's no existing cameraSource, create one.
+        if (cameraSource == null) {
+            cameraSource = CameraSource(activity, fireFaceOverlay)
+        }
+        try {
+            cameraSource?.setMachineLearningFrameProcessor(FaceDetectionProcessor())
+//            cameraSource?.setMachineLearningFrameProcessor(FaceContourDetectorProcessor())
+        } catch (e: FirebaseMLException) {
+            e.printLogE("can not create camera source: face contour")
+        }
     }
 }

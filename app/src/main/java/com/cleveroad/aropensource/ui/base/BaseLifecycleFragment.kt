@@ -58,7 +58,7 @@ abstract class BaseLifecycleFragment<T : BaseVM> : Fragment(), BaseView {
 
     private var permissionDisposable: MutableList<Disposable?>? = mutableListOf()
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
         baseView = bindInterfaceOrThrow<BaseView>(parentFragment, context)
         backPressedCallback = bindInterfaceOrThrow<BackPressedNavigationCallback>(parentFragment, context)

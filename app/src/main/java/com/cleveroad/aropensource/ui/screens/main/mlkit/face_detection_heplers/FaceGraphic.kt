@@ -3,7 +3,6 @@ package com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
-import androidx.camera.core.CameraX.LensFacing
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.BitmapUtils.rotateBitmap
 import com.cleveroad.aropensource.ui.screens.main.mlkit.common.GraphicOverlay
 import com.google.ar.sceneform.math.Vector3
@@ -16,16 +15,18 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark.*
  */
 class FaceGraphic(
     overlay: GraphicOverlay,
-    private val firebaseVisionFace: FirebaseVisionFace,
+    private val firebaseVisionFace: FirebaseVisionFace?,
     private val overlayBitmap: Bitmap?,
-    private val cameraFacing: LensFacing
+    private val cameraFacing: Int
 ) : GraphicOverlay.Graphic(overlay) {
 
     override fun draw(canvas: Canvas) {
-        drawImage(canvas, firebaseVisionFace)
+        val face = firebaseVisionFace ?: return
+
+        test(canvas, face)
     }
 
-    private fun drawImage(canvas: Canvas, face: FirebaseVisionFace) {
+    private fun test(canvas: Canvas, face: FirebaseVisionFace) {
         val leftEye = face.getLandmark(LEFT_EYE)?.position ?: return
         val rightEye = face.getLandmark(RIGHT_EYE)?.position ?: return
         val mouthBottom = face.getLandmark(MOUTH_BOTTOM)?.position ?: return
@@ -37,13 +38,11 @@ class FaceGraphic(
             (rightEye.y + leftEye.y) / 2 - mouthBottom.y,
             0F
         ).normalized()
-
         direction.x *= faceHeight
         direction.y *= faceHeight
 
         val x = translateX(mouthBottom.x + direction.x)
         val y = translateY(mouthBottom.y + direction.y)
-
 
         overlayBitmap?.let {
             rotateBitmap(it, cameraFacing, face.headEulerAngleY, face.headEulerAngleZ)
@@ -57,6 +56,7 @@ class FaceGraphic(
             val bottom = (y + imageEdgeSizeBasedOnFaceSizeY).toInt()
 
             canvas.drawBitmap(it, null, Rect(left, top, right, bottom), null)
+
         }
     }
 }
