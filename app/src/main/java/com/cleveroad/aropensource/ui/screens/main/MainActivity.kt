@@ -3,15 +3,14 @@ package com.cleveroad.aropensource.ui.screens.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.cleveroad.arfacedetector.ui.screens.main.arcore.face_detector.AugmentedFacesFragment
+import com.cleveroad.arfacedetector.ui.screens.main.mlkit.FaceDetectorFragment
 import com.cleveroad.aropensource.R
 import com.cleveroad.aropensource.ui.base.BaseLifecycleActivity
-import com.cleveroad.aropensource.ui.screens.main.arcore.CameraPreviewFragment
-import com.cleveroad.aropensource.ui.screens.main.arcore.face_detector.AugmentedFacesFragment
 import com.cleveroad.aropensource.ui.screens.main.chooser.InstrumentsCallback
 import com.cleveroad.aropensource.ui.screens.main.chooser.InstrumentsFragment
-import com.cleveroad.aropensource.ui.screens.main.mlkit.FaceDetectorFragment
 
-class MainActivity : BaseLifecycleActivity<MainVM>(), InstrumentsCallback {
+class MainActivity : BaseLifecycleActivity(), InstrumentsCallback {
 
     companion object {
         fun start(context: Context) = context.run {
@@ -27,10 +26,6 @@ class MainActivity : BaseLifecycleActivity<MainVM>(), InstrumentsCallback {
 
     override val layoutId = R.layout.activity_main
 
-    override val viewModelClass = MainVM::class.java
-
-    override fun observeLiveData() = Unit
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showInstrumentsScreen()
@@ -40,15 +35,11 @@ class MainActivity : BaseLifecycleActivity<MainVM>(), InstrumentsCallback {
         replaceFragment(InstrumentsFragment.newInstance(), false)
     }
 
-    private fun showCameraPreviewScreen() {
-        replaceFragment(CameraPreviewFragment.newInstance())
-    }
-
     override fun mlKitlSelected() {
-        replaceFragment(FaceDetectorFragment.newInstance())
+        replaceFragment(FaceDetectorFragment.newInstance(R.drawable.ic_joincleveroad_medium))
     }
 
     override fun arCoreSelected() {
-        replaceFragment(AugmentedFacesFragment.newInstance())
+        replaceFragment(AugmentedFacesFragment.newInstance(R.drawable.ic_joincleveroad_medium))
     }
 }

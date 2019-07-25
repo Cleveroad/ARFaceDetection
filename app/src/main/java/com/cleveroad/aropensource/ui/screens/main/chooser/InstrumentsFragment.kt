@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.view.View
 import com.cleveroad.aropensource.R
 import com.cleveroad.aropensource.ui.base.BaseLifecycleFragment
-import com.cleveroad.aropensource.utils.bindInterfaceOrThrow
-import com.cleveroad.bootstrap.kotlin_ext.setClickListeners
+import com.cleveroad.aropensource.ui.base.bindInterfaceOrThrow
 import kotlinx.android.synthetic.main.fragment_instruments.*
 
-class InstrumentsFragment : BaseLifecycleFragment<InstrumentsVM>(), View.OnClickListener {
+class InstrumentsFragment : BaseLifecycleFragment(), View.OnClickListener {
 
     companion object {
         fun newInstance() =
@@ -17,8 +16,6 @@ class InstrumentsFragment : BaseLifecycleFragment<InstrumentsVM>(), View.OnClick
                 arguments = Bundle()
             }
     }
-
-    override val viewModelClass = InstrumentsVM::class.java
 
     override val layoutId = R.layout.fragment_instruments
 
@@ -29,8 +26,6 @@ class InstrumentsFragment : BaseLifecycleFragment<InstrumentsVM>(), View.OnClick
     override fun hasToolbar() = true
 
     override fun getToolbarId() = R.id.toolbar
-
-    override fun observeLiveData() = Unit
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -44,7 +39,8 @@ class InstrumentsFragment : BaseLifecycleFragment<InstrumentsVM>(), View.OnClick
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setClickListeners(bArcore, bMlKit)
+        bArcore.setOnClickListener(this)
+        bMlKit.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {

@@ -7,7 +7,7 @@
         <item name="colorAccent">@color/pink_800</item>
         <item name="colorSecondary">@color/red_700</item>
         <item name="colorError">@color/red_900</item>
-        <item name="android:colorBackground">@color/bg_white</item>
+        <item name="android:colorBackground">@android:color/white</item>
     </style>
 
     <style name="CheckBoxTheme" parent="Widget.AppCompat.CompoundButton.CheckBox">

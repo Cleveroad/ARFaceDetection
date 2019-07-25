@@ -6,10 +6,4 @@
     <color name="red_700">#d32f2f</color>
     <color name="red_900">#b71c1c</color>
 
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-
-    <color name="bg_white">@color/white</color>
-    <color name="bg_black">@color/black</color>
-
 </resources>

@@ -6,17 +6,15 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-apply from: 'versions.gradle'
-
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion as Integer
-    buildToolsVersion rootProject.ext.buildToolsVersion as String
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.cleveroad.aropensource"
-        minSdkVersion rootProject.ext.minSdkVersion as Integer
-        targetSdkVersion rootProject.ext.targetSdkVersion as Integer
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -28,10 +26,6 @@ android {
         }
     }
 
-    println("Debug Build number $buildNoDevelop")
-    println("Prod Build number $buildNoProd")
-    println("Build Git Hash $buildGitHash")
-
     signingConfigs {
         debug {
             storeFile file("./debug.keystore")
@@ -40,39 +34,27 @@ android {
             keyPassword "android"
         }
     }
+
     buildTypes {
         all {
-            buildConfigField "String", "GIT_HASH", "\"$buildGitHash\""
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
             minifyEnabled false
             debuggable true
-            versionNameSuffix "." + buildNoDevelop + " Dev_" + buildGitHash
-            signingConfig signingConfigs.debug
-        }
-        stage {
-            minifyEnabled false
-            debuggable true
-            versionNameSuffix "." + buildNoDevelop + " Stage_" + buildGitHash
             signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
             debuggable false
-            versionNameSuffix "." + buildNoProd
         }
     }
-    // for jenkins
-    packagingOptions {
-        exclude 'META-INF/NOTICE' // It is not include NOTICE file
-        exclude 'META-INF/LICENSE' // It is not include LICENSE file
-        exclude 'META-INF/rxjava.properties' // It is not include LICENSE file
-    }
+
     dexOptions {
         javaMaxHeapSize "4g"
     }
+
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
@@ -80,46 +62,16 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.squareup.okhttp3:mockwebserver:3.12.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.google.firebase:firebase-core:16.0.9'
 
     // Support
-    implementation rootProject.ext.supportDependencies.lifecycleExtension
-    implementation rootProject.ext.supportDependencies.constraintlayout
-    implementation rootProject.ext.supportDependencies.recyclerView
-    implementation rootProject.ext.supportDependencies.appCompat
-    implementation rootProject.ext.supportDependencies.multiDex
-    implementation rootProject.ext.supportDependencies.kotlin
-    implementation rootProject.ext.supportDependencies.design
-
-    // Bootstrap
-    implementation rootProject.ext.bootstrapDependencies.core
-    implementation rootProject.ext.bootstrapDependencies.ext
-
-    // RxJava
-    implementation rootProject.ext.rxDependencies.rxJava2
-    implementation rootProject.ext.rxDependencies.rxKotlin
-
-    // LoggingInterceptor
-    implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
-        exclude group: 'org.json', module: 'json'
-    }
-
-    // OkHttpProfiler
-    implementation "com.itkacher.okhttpprofiler:okhttpprofiler:1.0.5"
-
-    //sceneform
-    implementation rootProject.ext.sceneform.sceneform_ux
-
-    //ml kit
-    implementation rootProject.ext.firebase.ml_vision
-    implementation rootProject.ext.firebase.ml_vision_face_model
-    implementation rootProject.ext.firebase.core
-
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-
-    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation project(path: ':lib')
 }
 
 apply plugin: 'com.google.gms.google-services'

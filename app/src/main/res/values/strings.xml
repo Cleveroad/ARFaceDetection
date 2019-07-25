@@ -1,31 +1,10 @@
 <resources>
     <string name="app_name">ARFaceDetection</string>
 
-    <!--error-->
-    <string name="server_error">Server error</string>
-    <string name="no_internet_connection_error">No internet connection</string>
-
-    <string name="sign_in">Sign In</string>
-    <string name="sign_up">Sign up</string>
-    <string name="first_name">First name</string>
-    <string name="last_name">Last name</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="confirm_password">Confirm password</string>
-    <string name="i_accept_the">I accept the&#160;</string>
-    <string name="and">&#160;and&#160;</string>
-
-    <!--info screen-->
-    <string name="title_terms_of_use">Terms &amp; Conditions</string>
-    <string name="title_privacy_policy">Privacy Policy</string>
-    <string name="agree">Agree</string>
-
     <!--instruments screen-->
     <string name="instrument_selector">Instrument selector</string>
     <string name="arcore">ARCore</string>
     <string name="mlkit">ML Kit</string>
     <string name="select_instrument">Select instrument</string>
-    <string name="front">front</string>
-    <string name="main">main</string>
 
 </resources>
