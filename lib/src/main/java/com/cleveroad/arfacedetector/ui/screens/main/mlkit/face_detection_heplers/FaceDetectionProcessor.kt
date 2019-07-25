@@ -2,10 +2,10 @@ package com.cleveroad.arfacedetector.ui.screens.main.mlkit.face_detection_hepler
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.BaseVisionProcessor
 import com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.CameraImageGraphic
 import com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.FrameMetadata
 import com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.GraphicOverlay
-import com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.VisionProcessorBase
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
@@ -16,7 +16,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.NO_C
 import java.io.IOException
 
 
-class FaceDetectionProcessor(private val overlayBitmap: Bitmap) : VisionProcessorBase<List<FirebaseVisionFace>>() {
+class FaceDetectionProcessor(private val overlayBitmap: Bitmap) : BaseVisionProcessor<List<FirebaseVisionFace>>() {
     companion object {
 
         private val TAG = "FaceDetectionProcessor"
@@ -55,8 +55,7 @@ class FaceDetectionProcessor(private val overlayBitmap: Bitmap) : VisionProcesso
                            frameMetadata: FrameMetadata,
                            graphicOverlay: GraphicOverlay) {
         graphicOverlay.clear()
-        val imageGraphic = CameraImageGraphic(graphicOverlay, originalCameraImage)
-        graphicOverlay.add(imageGraphic)
+        graphicOverlay.add(CameraImageGraphic(graphicOverlay, originalCameraImage))
         for (i in results.indices) {
             val face = results[i]
             val faceGraphic = FaceGraphic(graphicOverlay, face, overlayBitmap, frameMetadata.cameraFacing)

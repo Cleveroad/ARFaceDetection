@@ -2,6 +2,7 @@ package com.cleveroad.arfacedetector.ui.screens.main.mlkit.common
 
 import android.graphics.Bitmap
 import androidx.annotation.GuardedBy
+import com.cleveroad.arfacedetector.ui.base.safeLet
 import com.cleveroad.arfacedetector.utils.BitmapUtils
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
@@ -15,7 +16,7 @@ import java.nio.ByteBuffer
  *
  * @param <T> The type of the detected feature.
  */
-abstract class VisionProcessorBase<T> : VisionImageProcessor {
+abstract class BaseVisionProcessor<T> : VisionImageProcessor {
 
     // To keep the latest images and its metadata.
     @GuardedBy("this")
@@ -32,9 +33,7 @@ abstract class VisionProcessorBase<T> : VisionImageProcessor {
     private var processingMetaData: FrameMetadata? = null
 
     @Synchronized
-    override fun process(data: ByteBuffer,
-                         frameMetadata: FrameMetadata,
-                         graphicOverlay: GraphicOverlay) {
+    override fun process(data: ByteBuffer, frameMetadata: FrameMetadata, graphicOverlay: GraphicOverlay) {
         latestImage = data
         latestImageMetaData = frameMetadata
         if (processingImage == null && processingMetaData == null) {
@@ -48,15 +47,12 @@ abstract class VisionProcessorBase<T> : VisionImageProcessor {
         processingMetaData = latestImageMetaData
         latestImage = null
         latestImageMetaData = null
-        if (processingImage != null && processingMetaData != null) {
-            processImage(processingImage!!, processingMetaData!!, graphicOverlay)
+        safeLet(processingImage, processingMetaData) { processingImage, processingMetaData ->
+            processImage(processingImage, processingMetaData, graphicOverlay)
         }
     }
 
-    private fun processImage(data: ByteBuffer,
-                             frameMetadata: FrameMetadata,
-                             graphicOverlay: GraphicOverlay) {
-
+    private fun processImage(data: ByteBuffer, frameMetadata: FrameMetadata, graphicOverlay: GraphicOverlay) {
         val metadata = FirebaseVisionImageMetadata.Builder()
                 .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
                 .setWidth(frameMetadata.width)

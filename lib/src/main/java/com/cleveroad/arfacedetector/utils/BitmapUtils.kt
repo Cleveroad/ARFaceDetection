@@ -38,7 +38,7 @@ object BitmapUtils {
                 return rotateBitmap(bitmap, metadata.rotation, metadata.cameraFacing)
             }
         } catch (e: Exception) {
-            Log.e("VisionProcessorBase", "Error: " + e.message)
+            Log.e("BaseVisionProcessor", "Error: " + e.message)
         }
 
         return null

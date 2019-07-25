@@ -3,7 +3,6 @@ package com.cleveroad.arfacedetector.utils
 import android.app.ActivityManager
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.google.ar.core.ArCoreApk
 
 object ArUtils {
@@ -23,7 +22,6 @@ object ArUtils {
     fun checkIsSupportedDeviceOrFinish(context: Context): Boolean {
         if (ArCoreApk.getInstance().checkAvailability(context) == ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE) {
             Log.e(LOG_TAG, "Augmented Faces requires ARCore.")
-            Toast.makeText(context, "Augmented Faces requires ARCore", Toast.LENGTH_LONG).show()
             return false
         }
         val openGlVersionString =
@@ -33,7 +31,6 @@ object ArUtils {
         openGlVersionString?.toDoubleOrNull()?.let {
             if (it < MIN_OPENGL_VERSION) {
                 Log.e(LOG_TAG, "Sceneform requires OpenGL ES 3.0 later")
-                Toast.makeText(context, "Sceneform requires OpenGL ES 3.0 or later", Toast.LENGTH_LONG).show()
                 return false
             }
         }

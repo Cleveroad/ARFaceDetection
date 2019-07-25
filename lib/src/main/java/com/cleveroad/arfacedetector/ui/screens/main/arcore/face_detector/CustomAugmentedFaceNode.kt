@@ -3,9 +3,9 @@ package com.cleveroad.arfacedetector.ui.screens.main.arcore.face_detector
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.cleveroad.arfacedetector.R
 import com.google.ar.core.AugmentedFace
@@ -22,16 +22,18 @@ class CustomAugmentedFaceNode(augmentedFace: AugmentedFace?, private val context
 
     companion object {
         private const val HALF_DIVIDER = 2
+        private val LOG_TAG = this::class.java.simpleName
     }
 
-    private var logoNode: Node? = null
+    private var imageNode: Node? = null
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onActivate() {
         super.onActivate()
-        logoNode = Node()
-        logoNode?.setParent(this)
-        logoNode?.isEnabled = isTracking()
+        imageNode = Node().apply {
+            setParent(this)
+            isEnabled = isTracking()
+        }
 
         val imageView = LayoutInflater.from(context).inflate(R.layout.image_node_view, null) as ImageView
         imageView.setImageBitmap(bitmap)
@@ -40,33 +42,33 @@ class CustomAugmentedFaceNode(augmentedFace: AugmentedFace?, private val context
                 .setView(context, imageView)
                 .build()
                 .thenAccept { renderable ->
-                    logoNode?.renderable = renderable
+                    imageNode?.renderable = renderable
                 }
                 .exceptionally { throwable ->
-                    Toast.makeText(context, "Could not load plane card view.", Toast.LENGTH_LONG).show()
+                    Log.e(LOG_TAG, "Could not load plane card view.", throwable)
                     throw AssertionError("Could not load plane card view.", throwable)
                 }
     }
 
-    private fun isTracking() =
-            augmentedFace != null && augmentedFace?.trackingState == TrackingState.TRACKING
-
     override fun onUpdate(frameTime: FrameTime?) {
         super.onUpdate(frameTime)
 
-        logoNode?.isEnabled = isTracking().apply {
+        imageNode?.isEnabled = isTracking().apply {
             augmentedFace?.takeIf { this }?.run {
-                logoNode?.worldRotation = worldRotation
+                imageNode?.worldRotation = worldRotation
                 val rightHeard = getRegionPose(AugmentedFace.RegionType.FOREHEAD_RIGHT)
                 val leftHeard = getRegionPose(AugmentedFace.RegionType.FOREHEAD_LEFT)
 
                 val zCoordinate =
                         (leftHeard.tz() + rightHeard.tz()) / HALF_DIVIDER + (getRegionPose(AugmentedFace.RegionType.NOSE_TIP).tz() - centerPose.tz()) * -1
-                logoNode?.worldPosition =
+                imageNode?.worldPosition =
                         Vector3((leftHeard.tx() + rightHeard.tx()) / HALF_DIVIDER,
                                 (leftHeard.ty() + rightHeard.ty()) / HALF_DIVIDER,
                                 zCoordinate)
             }
         }
     }
+
+    private fun isTracking() =
+            augmentedFace != null && augmentedFace?.trackingState == TrackingState.TRACKING
 }
