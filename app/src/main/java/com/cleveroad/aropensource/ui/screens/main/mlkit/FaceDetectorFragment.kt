@@ -8,6 +8,9 @@ import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.Process.THREAD_PRIORITY_URGENT_AUDIO
+import android.util.Rational
+import android.util.Size
 import android.view.View
 import android.widget.CompoundButton
 import androidx.camera.core.*
@@ -18,7 +21,6 @@ import com.cleveroad.aropensource.ui.base.BaseLifecycleFragment
 import com.cleveroad.aropensource.ui.screens.main.mlkit.face_detection_heplers.FaceAnalyzer
 import com.cleveroad.aropensource.utils.AutoFitPreviewBuilder
 import com.cleveroad.bootstrap.kotlin_ext.hide
-import com.cleveroad.bootstrap.kotlin_ext.safeLet
 import kotlinx.android.synthetic.main.ml_kit_face_detector_fragment.*
 
 
@@ -111,12 +113,15 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
         displayManager?.unregisterDisplayListener(displayListener)
     }
 
+    @SuppressLint("RestrictedApi")
     private fun bindCameraUseCases() {
-        safeLet(preview, imageAnalyzer) { preview, imageAnalyzer ->
-            CameraX.unbind(preview, imageAnalyzer)
-        }
+        CameraX.unbindAll()
+        val aspectRatio = Rational(viewFinder.width, viewFinder.height)
+        val screenSize = Size(viewFinder.width, viewFinder.height)
 
         val previewConfig = PreviewConfig.Builder().apply {
+            setTargetAspectRatio(aspectRatio)
+            setTargetResolution(screenSize)
             setLensFacing(lensFacing)
             setTargetRotation(viewFinder.display.rotation)
         }.build()
@@ -124,13 +129,13 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
         preview = AutoFitPreviewBuilder.build(previewConfig, viewFinder)
 
         val analyzerConfig = ImageAnalysisConfig.Builder().apply {
-            setLensFacing(lensFacing)
-            val analyzerThread = HandlerThread("FaceAnalyzer").apply { start() }
+            val analyzerThread = HandlerThread("FaceAnalyzer", THREAD_PRIORITY_URGENT_AUDIO).apply { start() }
             setCallbackHandler(Handler(analyzerThread.looper))
+            setLensFacing(lensFacing)
+            setTargetAspectRatio(aspectRatio)
             setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
-            // Set initial target rotation, we will have to call this again if rotation changes
-            // during the lifecycle of this use case
             setTargetRotation(viewFinder.display.rotation)
+            setImageQueueDepth(1)
         }.build()
         imageAnalyzer = ImageAnalysis(analyzerConfig).apply {
             fireFaceOverlay.run {
@@ -139,7 +144,6 @@ class FaceDetectorFragment : BaseLifecycleFragment<FaceDetectorVM>(), CompoundBu
             analyzer = FaceAnalyzer(fireFaceOverlay, lensFacing)
         }
 
-        // Apply declared configs to CameraX using the same lifecycle owner
         CameraX.bindToLifecycle(viewLifecycleOwner, preview, imageAnalyzer)
 
     }

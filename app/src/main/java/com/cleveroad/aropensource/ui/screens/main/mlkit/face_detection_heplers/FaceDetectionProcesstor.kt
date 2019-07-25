@@ -26,10 +26,9 @@ class FaceDetectionProcessor : VisionProcessorBase<List<FirebaseVisionFace>>() {
 
     init {
         val options = FirebaseVisionFaceDetectorOptions.Builder()
-            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
+            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
             .setClassificationMode(FirebaseVisionFaceDetectorOptions.NO_CLASSIFICATIONS)
             .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
-            .enableTracking()
             .setMinFaceSize(0.4F)
             .setContourMode(NO_CONTOURS)
             .build()
@@ -61,6 +60,7 @@ class FaceDetectionProcessor : VisionProcessorBase<List<FirebaseVisionFace>>() {
             val face = results[i]
             val faceGraphic = FaceGraphic(graphicOverlay, face, overlayBitmap, frameMetadata.cameraFacing)
             graphicOverlay.add(faceGraphic)
+            break
         }
         graphicOverlay.postInvalidate()
     }
