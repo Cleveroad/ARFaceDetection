@@ -28,11 +28,11 @@ class FaceDetectorFragment : BaseLifecycleFragment(), CompoundButton.OnCheckedCh
         private const val RES_ID_EXTRA = "res_id"
 
         fun newInstance(@DrawableRes resId: Int) =
-            FaceDetectorFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(RES_ID_EXTRA, resId)
+                FaceDetectorFragment().apply {
+                    arguments = Bundle().apply {
+                        putInt(RES_ID_EXTRA, resId)
+                    }
                 }
-            }
     }
 
     override val layoutId = R.layout.ml_kit_face_detector_fragment
@@ -61,7 +61,7 @@ class FaceDetectorFragment : BaseLifecycleFragment(), CompoundButton.OnCheckedCh
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         cameraSource?.setFacing(if (isChecked) CAMERA_FACING_FRONT else CAMERA_FACING_BACK)
-        firePreview?.stop()
+        cameraSourcePreview?.stop()
         startCameraSource()
     }
 
@@ -72,7 +72,7 @@ class FaceDetectorFragment : BaseLifecycleFragment(), CompoundButton.OnCheckedCh
 
     /** Stops the camera.  */
     override fun onPause() {
-        firePreview?.stop()
+        cameraSourcePreview?.stop()
         super.onPause()
     }
 
@@ -89,9 +89,9 @@ class FaceDetectorFragment : BaseLifecycleFragment(), CompoundButton.OnCheckedCh
     private fun startCameraSource() {
         cameraSource?.let {
             try {
-                firePreview ?: Log.d(LOG_TAG, "resume: Preview is null")
-                fireFaceOverlay ?: Log.d(LOG_TAG, "resume: graphOverlay is null")
-                safeLet(firePreview, fireFaceOverlay) { firePreview, fireFaceOverlay ->
+                cameraSourcePreview ?: Log.d(LOG_TAG, "resume: Preview is null")
+                faceOverlay ?: Log.d(LOG_TAG, "resume: graphOverlay is null")
+                safeLet(cameraSourcePreview, faceOverlay) { firePreview, fireFaceOverlay ->
                     firePreview.start(cameraSource, fireFaceOverlay)
                 }
             } catch (e: IOException) {
@@ -105,7 +105,7 @@ class FaceDetectorFragment : BaseLifecycleFragment(), CompoundButton.OnCheckedCh
     private fun createCameraSource() {
         // If there's no existing cameraSource, create one.
         if (cameraSource == null) {
-            cameraSource = CameraSource(activity, fireFaceOverlay)
+            cameraSource = CameraSource(activity, faceOverlay)
         }
         safeLet(context, arguments?.getInt(RES_ID_EXTRA)) { context, resId ->
             BitmapUtils.getBitmapFromVectorDrawable(context, resId)?.let {

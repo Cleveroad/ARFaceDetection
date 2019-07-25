@@ -32,11 +32,9 @@ abstract class VisionProcessorBase<T> : VisionImageProcessor {
     private var processingMetaData: FrameMetadata? = null
 
     @Synchronized
-    override fun process(
-        data: ByteBuffer,
-        frameMetadata: FrameMetadata,
-        graphicOverlay: GraphicOverlay
-    ) {
+    override fun process(data: ByteBuffer,
+                         frameMetadata: FrameMetadata,
+                         graphicOverlay: GraphicOverlay) {
         latestImage = data
         latestImageMetaData = frameMetadata
         if (processingImage == null && processingMetaData == null) {
@@ -55,43 +53,38 @@ abstract class VisionProcessorBase<T> : VisionImageProcessor {
         }
     }
 
-    private fun processImage(data: ByteBuffer, frameMetadata: FrameMetadata, graphicOverlay: GraphicOverlay) {
+    private fun processImage(data: ByteBuffer,
+                             frameMetadata: FrameMetadata,
+                             graphicOverlay: GraphicOverlay) {
+
         val metadata = FirebaseVisionImageMetadata.Builder()
-            .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-            .setWidth(frameMetadata.width)
-            .setHeight(frameMetadata.height)
-            .setRotation(frameMetadata.rotation)
-            .build()
+                .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+                .setWidth(frameMetadata.width)
+                .setHeight(frameMetadata.height)
+                .setRotation(frameMetadata.rotation)
+                .build()
 
         BitmapUtils.getBitmap(data, frameMetadata)?.let {
-            detectInVisionImage(
-                it,
-                FirebaseVisionImage.fromByteBuffer(data, metadata),
-                frameMetadata,
-                graphicOverlay
-            )
+            detectInVisionImage(it,
+                    FirebaseVisionImage.fromByteBuffer(data, metadata),
+                    frameMetadata,
+                    graphicOverlay)
         }
     }
 
-    private fun detectInVisionImage(
-        originalCameraImage: Bitmap,
-        image: FirebaseVisionImage,
-        metadata: FrameMetadata?,
-        graphicOverlay: GraphicOverlay
-    ) {
+    private fun detectInVisionImage(originalCameraImage: Bitmap,
+                                    image: FirebaseVisionImage,
+                                    metadata: FrameMetadata,
+                                    graphicOverlay: GraphicOverlay) {
         detectInImage(image)
-            .addOnSuccessListener { results ->
-                onSuccess(
-                    originalCameraImage, results,
-                    metadata!!,
-                    graphicOverlay
-                )
-                processLatestImage(graphicOverlay)
-            }
-            .addOnFailureListener { e -> onFailure(e) }
+                .addOnSuccessListener { results ->
+                    onSuccess(originalCameraImage, results, metadata, graphicOverlay)
+                    processLatestImage(graphicOverlay)
+                }
+                .addOnFailureListener { e -> onFailure(e) }
     }
 
-    override fun stop() {}
+    override fun stop() = Unit
 
     protected abstract fun detectInImage(image: FirebaseVisionImage): Task<T>
 
@@ -101,12 +94,10 @@ abstract class VisionProcessorBase<T> : VisionImageProcessor {
      * @param originalCameraImage hold the original image from camera, used to draw the background
      * image.
      */
-    protected abstract fun onSuccess(
-        originalCameraImage: Bitmap,
-        results: T,
-        frameMetadata: FrameMetadata,
-        graphicOverlay: GraphicOverlay
-    )
+    protected abstract fun onSuccess(originalCameraImage: Bitmap,
+                                     results: T,
+                                     frameMetadata: FrameMetadata,
+                                     graphicOverlay: GraphicOverlay)
 
     protected abstract fun onFailure(e: Exception)
 }

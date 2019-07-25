@@ -27,9 +27,9 @@ object ArUtils {
             return false
         }
         val openGlVersionString =
-            (context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager)
-                ?.deviceConfigurationInfo
-                ?.glEsVersion
+                (context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager)
+                        ?.deviceConfigurationInfo
+                        ?.glEsVersion
         openGlVersionString?.toDoubleOrNull()?.let {
             if (it < MIN_OPENGL_VERSION) {
                 Log.e(LOG_TAG, "Sceneform requires OpenGL ES 3.0 later")

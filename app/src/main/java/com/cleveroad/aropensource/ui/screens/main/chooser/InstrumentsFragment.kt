@@ -12,9 +12,9 @@ class InstrumentsFragment : BaseLifecycleFragment(), View.OnClickListener {
 
     companion object {
         fun newInstance() =
-            InstrumentsFragment().apply {
-                arguments = Bundle()
-            }
+                InstrumentsFragment().apply {
+                    arguments = Bundle()
+                }
     }
 
     override val layoutId = R.layout.fragment_instruments

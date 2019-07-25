@@ -46,7 +46,7 @@ abstract class BaseLifecycleFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(layoutId, container, false)
+            inflater.inflate(layoutId, container, false)
 
     override fun onResume() {
         super.onResume()
@@ -157,16 +157,16 @@ abstract class BaseLifecycleFragment : Fragment() {
      * @return Screen title
      */
     private fun getStringScreenTitle() =
-        when (getScreenTitle()) {
-            NO_TITLE -> EMPTY_STRING
-            else -> getString(getScreenTitle())
-        }
+            when (getScreenTitle()) {
+                NO_TITLE -> EMPTY_STRING
+                else -> getString(getScreenTitle())
+            }
 
     @SuppressWarnings("SpreadOperator")
     protected fun requestPermission(
-        vararg permission: String,
-        isDeniedCallback: () -> Unit = { },
-        isGrantedCallback: () -> Unit
+            vararg permission: String,
+            isDeniedCallback: () -> Unit = { },
+            isGrantedCallback: () -> Unit
     ) {
         permissionDisposable?.add(rxPermission?.request(*permission)?.subscribe { granted ->
             if (granted) isGrantedCallback() else isDeniedCallback()

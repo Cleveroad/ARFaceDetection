@@ -28,7 +28,7 @@ abstract class BaseLifecycleFragment : Fragment() {
     protected var toolbar: Toolbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(layoutId, container, false)
+            inflater.inflate(layoutId, container, false)
 
     override fun onResume() {
         super.onResume()

@@ -8,5 +8,5 @@ package com.cleveroad.aropensource.ui.base
  * @return first object which implement interface [T]
  */
 inline fun <reified T> bindInterfaceOrThrow(vararg objects: Any?): T =
-    objects.find { it is T } as T
-        ?: throw NotImplementedInterfaceException(T::class.java)
+        objects.find { it is T } as T
+                ?: throw NotImplementedInterfaceException(T::class.java)

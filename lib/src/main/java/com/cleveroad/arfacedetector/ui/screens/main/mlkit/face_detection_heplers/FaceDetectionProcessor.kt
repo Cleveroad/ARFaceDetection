@@ -6,7 +6,6 @@ import com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.CameraImageGrap
 import com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.FrameMetadata
 import com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.GraphicOverlay
 import com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.VisionProcessorBase
-import com.cleveroad.arfacedetector.utils.BitmapUtils
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
@@ -18,17 +17,23 @@ import java.io.IOException
 
 
 class FaceDetectionProcessor(private val overlayBitmap: Bitmap) : VisionProcessorBase<List<FirebaseVisionFace>>() {
+    companion object {
+
+        private val TAG = "FaceDetectionProcessor"
+
+        private const val MIN_FACE_SIZE = 0.4F
+    }
 
     private val detector: FirebaseVisionFaceDetector
 
     init {
         val options = FirebaseVisionFaceDetectorOptions.Builder()
-            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
-            .setClassificationMode(FirebaseVisionFaceDetectorOptions.NO_CLASSIFICATIONS)
-            .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
-            .setMinFaceSize(0.4f)
-            .setContourMode(NO_CONTOURS)
-            .build()
+                .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
+                .setClassificationMode(FirebaseVisionFaceDetectorOptions.NO_CLASSIFICATIONS)
+                .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
+                .setMinFaceSize(MIN_FACE_SIZE)
+                .setContourMode(NO_CONTOURS)
+                .build()
 
         detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
     }
@@ -45,12 +50,10 @@ class FaceDetectionProcessor(private val overlayBitmap: Bitmap) : VisionProcesso
         return detector.detectInImage(image)
     }
 
-    override fun onSuccess(
-        originalCameraImage: Bitmap,
-        results: List<FirebaseVisionFace>,
-        frameMetadata: FrameMetadata,
-        graphicOverlay: GraphicOverlay
-    ) {
+    override fun onSuccess(originalCameraImage: Bitmap,
+                           results: List<FirebaseVisionFace>,
+                           frameMetadata: FrameMetadata,
+                           graphicOverlay: GraphicOverlay) {
         graphicOverlay.clear()
         val imageGraphic = CameraImageGraphic(graphicOverlay, originalCameraImage)
         graphicOverlay.add(imageGraphic)
@@ -64,10 +67,5 @@ class FaceDetectionProcessor(private val overlayBitmap: Bitmap) : VisionProcesso
 
     override fun onFailure(e: Exception) {
         Log.e(TAG, "Face detection failed $e")
-    }
-
-    companion object {
-
-        private val TAG = "FaceDetectionProcessor"
     }
 }

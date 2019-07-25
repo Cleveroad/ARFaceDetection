@@ -18,12 +18,10 @@ abstract class BaseLifecycleActivity : AppCompatActivity() {
         setContentView(layoutId)
     }
 
-    protected fun replaceFragment(
-        fragment: Fragment,
-        needToAddToBackStack: Boolean = true,
-        @AnimRes inAnimRes: Int = 0,
-        @AnimRes outAnimRes: Int = 0
-    ) {
+    protected fun replaceFragment(fragment: Fragment,
+                                  needToAddToBackStack: Boolean = true,
+                                  @AnimRes inAnimRes: Int = 0,
+                                  @AnimRes outAnimRes: Int = 0) {
         val name = fragment.javaClass.simpleName
         supportFragmentManager.beginTransaction().apply {
             if (inAnimRes != 0 || outAnimRes != 0) setCustomAnimations(inAnimRes, outAnimRes)
@@ -66,6 +64,6 @@ abstract class BaseLifecycleActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         supportFragmentManager.findFragmentById(containerId)
-            ?.onRequestPermissionsResult(requestCode, permissions, grantResults)
+                ?.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

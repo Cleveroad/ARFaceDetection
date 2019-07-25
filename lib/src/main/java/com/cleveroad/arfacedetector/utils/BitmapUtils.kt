@@ -16,13 +16,13 @@ import java.nio.ByteBuffer
 object BitmapUtils {
 
     fun getBitmapFromVectorDrawable(context: Context, drawableId: Int): Bitmap? =
-        ContextCompat.getDrawable(context, drawableId)?.run {
-            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            setBounds(0, 0, canvas.width, canvas.height)
-            draw(canvas)
-            return bitmap
-        }
+            ContextCompat.getDrawable(context, drawableId)?.run {
+                val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bitmap)
+                setBounds(0, 0, canvas.width, canvas.height)
+                draw(canvas)
+                return bitmap
+            }
 
     // Convert NV21 format byte buffer to bitmap.
     fun getBitmap(data: ByteBuffer, metadata: FrameMetadata): Bitmap? {

@@ -18,12 +18,12 @@ internal class FaceDetectorFragment : ArFragment() {
     }
 
     override fun getSessionConfiguration(session: Session?): Config =
-        Config(session).apply {
-            augmentedFaceMode = Config.AugmentedFaceMode.MESH3D
-        }
+            Config(session).apply {
+                augmentedFaceMode = Config.AugmentedFaceMode.MESH3D
+            }
 
     override fun getSessionFeatures(): MutableSet<Session.Feature> =
-        mutableSetOf(Session.Feature.FRONT_CAMERA)
+            mutableSetOf(Session.Feature.FRONT_CAMERA)
 
     /**
      * Override to turn off planeDiscoveryController. Plane trackables are not supported with the

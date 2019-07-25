@@ -26,8 +26,10 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
+
 import com.google.android.gms.common.images.Size;
 
 import java.io.IOException;

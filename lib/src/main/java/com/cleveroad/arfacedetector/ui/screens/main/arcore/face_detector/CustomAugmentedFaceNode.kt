@@ -18,7 +18,7 @@ import com.google.ar.sceneform.ux.AugmentedFaceNode
 
 
 class CustomAugmentedFaceNode(augmentedFace: AugmentedFace?, private val context: Context, private val bitmap: Bitmap) :
-    AugmentedFaceNode(augmentedFace) {
+        AugmentedFaceNode(augmentedFace) {
 
     companion object {
         private const val HALF_DIVIDER = 2
@@ -33,23 +33,23 @@ class CustomAugmentedFaceNode(augmentedFace: AugmentedFace?, private val context
         logoNode?.setParent(this)
         logoNode?.isEnabled = isTracking()
 
-        val imageView = LayoutInflater.from(context).inflate(R.layout.logo_view, null) as ImageView
+        val imageView = LayoutInflater.from(context).inflate(R.layout.image_node_view, null) as ImageView
         imageView.setImageBitmap(bitmap)
 
         ViewRenderable.builder()
-            .setView(context, imageView)
-            .build()
-            .thenAccept { renderable ->
-                logoNode?.renderable = renderable
-            }
-            .exceptionally { throwable ->
-                Toast.makeText(context, "Could not load plane card view.", Toast.LENGTH_LONG).show()
-                throw AssertionError("Could not load plane card view.", throwable)
-            }
+                .setView(context, imageView)
+                .build()
+                .thenAccept { renderable ->
+                    logoNode?.renderable = renderable
+                }
+                .exceptionally { throwable ->
+                    Toast.makeText(context, "Could not load plane card view.", Toast.LENGTH_LONG).show()
+                    throw AssertionError("Could not load plane card view.", throwable)
+                }
     }
 
     private fun isTracking() =
-        augmentedFace != null && augmentedFace?.trackingState == TrackingState.TRACKING
+            augmentedFace != null && augmentedFace?.trackingState == TrackingState.TRACKING
 
     override fun onUpdate(frameTime: FrameTime?) {
         super.onUpdate(frameTime)
@@ -61,12 +61,11 @@ class CustomAugmentedFaceNode(augmentedFace: AugmentedFace?, private val context
                 val leftHeard = getRegionPose(AugmentedFace.RegionType.FOREHEAD_LEFT)
 
                 val zCoordinate =
-                    (leftHeard.tz() + rightHeard.tz()) / HALF_DIVIDER + (getRegionPose(AugmentedFace.RegionType.NOSE_TIP).tz() - centerPose.tz()) * -1
-                logoNode?.worldPosition = Vector3(
-                    (leftHeard.tx() + rightHeard.tx()) / HALF_DIVIDER,
-                    (leftHeard.ty() + rightHeard.ty()) / HALF_DIVIDER,
-                    zCoordinate
-                )
+                        (leftHeard.tz() + rightHeard.tz()) / HALF_DIVIDER + (getRegionPose(AugmentedFace.RegionType.NOSE_TIP).tz() - centerPose.tz()) * -1
+                logoNode?.worldPosition =
+                        Vector3((leftHeard.tx() + rightHeard.tx()) / HALF_DIVIDER,
+                                (leftHeard.ty() + rightHeard.ty()) / HALF_DIVIDER,
+                                zCoordinate)
             }
         }
     }

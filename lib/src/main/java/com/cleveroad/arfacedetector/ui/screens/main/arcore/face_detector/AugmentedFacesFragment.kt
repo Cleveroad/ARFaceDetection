@@ -21,11 +21,11 @@ class AugmentedFacesFragment : BaseLifecycleFragment() {
         private const val RES_ID_EXTRA = "res_id"
 
         fun newInstance(@DrawableRes resId: Int) =
-            AugmentedFacesFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(RES_ID_EXTRA, resId)
+                AugmentedFacesFragment().apply {
+                    arguments = Bundle().apply {
+                        putInt(RES_ID_EXTRA, resId)
+                    }
                 }
-            }
     }
 
     override val layoutId = R.layout.fragment_augmented_faces
@@ -71,10 +71,10 @@ class AugmentedFacesFragment : BaseLifecycleFragment() {
             if (!faceNodeMap.containsKey(face)) {
                 safeLet(bitmap, context) { bitmap, context ->
                     faceNodeMap[face] =
-                        CustomAugmentedFaceNode(face, context, bitmap)
-                            .apply {
-                                setParent(sceneView.scene)
-                            }
+                            CustomAugmentedFaceNode(face, context, bitmap)
+                                    .apply {
+                                        setParent(sceneView.scene)
+                                    }
                 }
             }
         }
