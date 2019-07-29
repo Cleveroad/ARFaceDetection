@@ -50,7 +50,7 @@ android {
         targetCompatibility = '1.8'
     }
 }
-
+ 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-core:16.0.9'
