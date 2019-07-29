@@ -5,7 +5,9 @@ We’re glad to share with you our latest AR-based library for Android. It’s d
 
 ![Demo image](/images/demo_.gif)
 
-You can try the functionality of the library right on your devices! Go to this link to download our application from Google Play.
+You can try the functionality of the library right on your devices! Go to this link to download our application from <a target="_blank"  href="https://play.google.com/store/apps/details?id=com.cleveroad.aropensource">Google Play Store</a>.
+
+[![Awesome](/images/google-play.png)](https://play.google.com/store/apps/details?id=com.cleveroad.aropensource)
 
 [![Awesome](/images/logo-footer_.png)](https://www.cleveroad.com/?utm_source=github&utm_medium=label&utm_campaign=contacts)
 <br/>
