@@ -31,7 +31,7 @@ class CustomAugmentedFaceNode(augmentedFace: AugmentedFace?, private val context
     override fun onActivate() {
         super.onActivate()
         imageNode = Node().apply {
-            setParent(this)
+            setParent(this@CustomAugmentedFaceNode)
             isEnabled = isTracking()
         }
 
