@@ -19,7 +19,7 @@ object ArUtils {
      *
      * Finishes the activity if Sceneform can not run
      */
-    fun checkIsSupportedDeviceOrFinish(context: Context): Boolean {
+    fun checkIsSupportedDevice(context: Context): Boolean {
         if (ArCoreApk.getInstance().checkAvailability(context) == ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE) {
             Log.e(LOG_TAG, "Augmented Faces requires ARCore.")
             return false

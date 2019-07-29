@@ -58,7 +58,7 @@ object BitmapUtils {
         matrix.postRotate(rotationDegree.toFloat())
         if (facing == CAMERA_FACING_FRONT) {
             // Mirror the image along X axis for front-facing camera image.
-            matrix.postScale(-1.0f, 1.0f)
+            matrix.postScale(-1.0F, 1.0F)
         }
 
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
@@ -71,8 +71,8 @@ object BitmapUtils {
         val camera = Camera()
         camera.save()
         if (facing == CAMERA_FACING_FRONT) {
-            resultAngleY *= -1f
-            resultAngleZ *= -1f
+            resultAngleY *= -1F
+            resultAngleZ *= -1F
         }
         camera.rotateZ(resultAngleZ)
         camera.rotateY(resultAngleY)

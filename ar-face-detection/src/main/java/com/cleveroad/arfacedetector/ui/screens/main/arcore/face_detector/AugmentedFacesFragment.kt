@@ -43,7 +43,7 @@ class AugmentedFacesFragment : BaseLifecycleFragment() {
     override fun getToolbarId() = NO_TOOLBAR
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (!ArUtils.checkIsSupportedDeviceOrFinish(requireContext())) return
+        if (!ArUtils.checkIsSupportedDevice(requireContext())) return
 
         bitmap = safeLet(arguments?.getInt(RES_ID_EXTRA), context) { resId, context ->
             BitmapUtils.getBitmapFromVectorDrawable(context, resId)
