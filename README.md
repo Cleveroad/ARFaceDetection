@@ -16,7 +16,7 @@ To use ARFaceDetection first add dependency to your project:
 ```groovy
 dependencies {
     implementation 'com.google.firebase:firebase-core:17.4.3'
-    implementation 'com.cleveroad.ARFaceDetection:ar-face-detection:1.0.3'
+    implementation 'com.cleveroad.ARFaceDetection:ar-face-detection:1.0.4'
 }
 ```
 AndroidManifest

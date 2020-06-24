@@ -18,4 +18,4 @@ Version | Changes
 ---     | ---
 v.1.0.0 | <ul><li>Add face detection via ARCore.</li>
 v.1.0.2 | <ul><li>Add face detection via MLKit.</li>
-v.1.0.3 | <ul><li>Add face detection via MLKit using CameraX.</li>
+v.1.0.4 | <ul><li>Add face detection via MLKit using CameraX.</li>
