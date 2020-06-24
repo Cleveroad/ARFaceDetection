@@ -15,8 +15,8 @@ You can try the functionality of the library right on your devices! Go to this l
 To use ARFaceDetection first add dependency to your project:
 ```groovy
 dependencies {
-    implementation 'com.google.firebase:firebase-core:16.0.9'
-    implementation 'com.cleveroad.ARFaceDetection:ar-face-detection:1.0.2'
+    implementation 'com.google.firebase:firebase-core:17.4.3'
+    implementation 'com.cleveroad.ARFaceDetection:ar-face-detection:1.0.3'
 }
 ```
 AndroidManifest
@@ -59,6 +59,13 @@ class MyApp : Application() {
 Face detection val MLKit
 ```groovy
 val fragment = FaceDetectorFragment.newInstance(R.drawable.icon)       
+supportFragmentManager.beginTransaction().apply {
+    replace(R.id.container, fragment, fragment.javaClass.simpleName)
+}.commit()
+```
+Face detection val MLKit using CameraX
+```groovy
+val fragment = FaceDetectorCameraXFragment.newInstance(R.drawable.icon)
 supportFragmentManager.beginTransaction().apply {
     replace(R.id.container, fragment, fragment.javaClass.simpleName)
 }.commit()

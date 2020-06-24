@@ -53,7 +53,7 @@ android {
  
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-core:17.4.3'
 
     // Support
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'

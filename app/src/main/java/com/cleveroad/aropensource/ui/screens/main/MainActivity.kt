@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.cleveroad.arfacedetector.ui.screens.main.arcore.face_detector.AugmentedFacesFragment
 import com.cleveroad.arfacedetector.ui.screens.main.mlkit.FaceDetectorFragment
+import com.cleveroad.arfacedetector.ui.screens.main.mlkit_camerax.FaceDetectorCameraXFragment
 import com.cleveroad.aropensource.R
 import com.cleveroad.aropensource.ui.base.BaseLifecycleActivity
 import com.cleveroad.aropensource.ui.screens.main.chooser.InstrumentsCallback
@@ -37,6 +38,10 @@ class MainActivity : BaseLifecycleActivity(), InstrumentsCallback {
 
     override fun mlKitlSelected() {
         replaceFragment(FaceDetectorFragment.newInstance(R.drawable.ic_joincleveroad_medium))
+    }
+
+    override fun mlKitlCameraXSelected() {
+        replaceFragment(FaceDetectorCameraXFragment.newInstance(R.drawable.ic_joincleveroad_medium))
     }
 
     override fun arCoreSelected() {

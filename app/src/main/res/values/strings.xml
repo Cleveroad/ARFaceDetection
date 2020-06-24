@@ -5,6 +5,7 @@
     <string name="instrument_selector">Instrument selector</string>
     <string name="arcore">ARCore</string>
     <string name="mlkit">ML Kit</string>
+    <string name="mlkit_camerax">ML Kit + CameraX</string>
     <string name="select_instrument">Select instrument</string>
 
 </resources>

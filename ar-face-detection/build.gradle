@@ -47,11 +47,16 @@ dependencies {
     implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.9.0'
 
     //ml kit
-    implementation 'com.google.firebase:firebase-core:16.0.9'
-    implementation 'com.google.firebase:firebase-ml-vision:20.0.0'
-    implementation 'com.google.firebase:firebase-ml-vision-face-model:17.0.2'
+    implementation 'com.google.firebase:firebase-ml-vision:24.0.3'
+    implementation 'com.google.firebase:firebase-ml-vision-face-model:20.0.1'
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+
+    def cameraXVersion = '1.0.0-beta04'
+    implementation "androidx.camera:camera-core:$cameraXVersion"
+    implementation "androidx.camera:camera-camera2:$cameraXVersion"
+    implementation "androidx.camera:camera-lifecycle:$cameraXVersion"
+    implementation "androidx.camera:camera-view:1.0.0-alpha11"
 }

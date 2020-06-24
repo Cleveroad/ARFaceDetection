@@ -27,7 +27,7 @@ class InstrumentsFragment : BaseLifecycleFragment(), View.OnClickListener {
 
     override fun getToolbarId() = R.id.toolbar
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         instrumentsCallback = bindInterfaceOrThrow<InstrumentsCallback>(context)
     }
@@ -39,14 +39,16 @@ class InstrumentsFragment : BaseLifecycleFragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bArcore.setOnClickListener(this)
-        bMlKit.setOnClickListener(this)
+        llArcore.setOnClickListener(this)
+        llMlKit.setOnClickListener(this)
+        llMlKitCameraX.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.bArcore -> instrumentsCallback?.arCoreSelected()
-            R.id.bMlKit -> instrumentsCallback?.mlKitlSelected()
+            R.id.llArcore -> instrumentsCallback?.arCoreSelected()
+            R.id.llMlKit -> instrumentsCallback?.mlKitlSelected()
+            R.id.llMlKitCameraX -> instrumentsCallback?.mlKitlCameraXSelected()
         }
     }
 }
