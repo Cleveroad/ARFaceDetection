@@ -30,7 +30,6 @@ android {
         all {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
         debug {
             minifyEnabled false
             debuggable true
@@ -50,7 +49,7 @@ android {
         targetCompatibility = '1.8'
     }
 }
- 
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-core:17.4.3'
